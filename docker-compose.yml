@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  quizyzunaapi:
+    container_name: API
+    image: ${DOCKER_REGISTRY-}quizyzunaapi
+    build:
+      context: .
+      dockerfile: QuizyZunaAPI/Dockerfile
+
+  quizyzunaapi-db:
+    container_name: Database
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=quizyzuna-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.containers/database:/var/lib/postgressql/data
