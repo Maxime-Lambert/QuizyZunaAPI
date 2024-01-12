@@ -22,17 +22,20 @@ jobs:
           dotnet-version: '8.x'
           include-prerelease: true
 
+      - name: Restore
+        run: dotnet restore ./QuizyZunaAPI.sln
+
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ./QuizyZunaAPI.sln --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./QuizyZunaAPI.sln --configuration Release --no-build -o ${{env.DOTNET_ROOT}}/QuizyZunaAPI
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/QuizyZunaAPI
 
   deploy:
     runs-on: ubuntu-latest
