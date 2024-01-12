@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.x'
           include-prerelease: true
@@ -29,13 +29,12 @@ jobs:
         run: dotnet build ./QuizyZunaAPI.sln --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish ./QuizyZunaAPI.sln --configuration Release --no-build -o ${{env.DOTNET_ROOT}}/QuizyZunaAPI
+        run: dotnet publish ./QuizyZunaAPI.sln --configuration Release --no-build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/QuizyZunaAPI
 
   deploy:
     runs-on: ubuntu-latest
