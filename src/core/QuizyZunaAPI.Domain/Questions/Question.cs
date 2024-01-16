@@ -4,7 +4,7 @@ using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 namespace QuizyZunaAPI.Domain.Questions;
 
-public sealed class Question : IAmAggregateRoot
+public sealed class Question
 {
     public QuestionId QuestionId { get; private init; }
 
