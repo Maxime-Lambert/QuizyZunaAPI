@@ -4,6 +4,7 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record Answers(CorrectAnswer CorrectAnswer, WrongAnswers WrongAnswers)
 {
+
     public static Answers Create(CorrectAnswer correctAnswer, WrongAnswers wrongAnswers)
     {
         if (correctAnswer is null)

@@ -31,19 +31,15 @@ app.UseHttpsRedirection();
 
 app.MapGet("/questions", () =>
 {
-    var guid = Guid.NewGuid();
-    var text = "Is this a question ?";
-    var correctAnswer = "Yes";
-    List<string> wrongAnswers = ["No", "Maybe", "Impossible"];
-    List<Topic> topics = [Topic.Literature];
+    var id = QuestionId.Create(Guid.NewGuid());
+    var title = Title.Create("Is this a question ?");
+    var correctAnswer = CorrectAnswer.Create("Yes");
+    var wrongAnswers = WrongAnswers.Create(["No", "Maybe", "Impossible"]);
+    var answers = Answers.Create(correctAnswer, wrongAnswers);
+    var topics = Topics.Create([Topic.Literature]);
     var difficulty = Difficulty.Beginner;
-    var question = Question.Create(new QuestionId(guid),
-            new Title(text),
-            Answers.Create(new CorrectAnswer(correctAnswer),
-                            WrongAnswers.Create(wrongAnswers)),
-            Topics.Create(topics),
-            difficulty);
-    return question;
+
+    return Question.Create(id, title, answers, topics, difficulty);
 })
 .WithName("GetQuestion")
 .WithOpenApi();
