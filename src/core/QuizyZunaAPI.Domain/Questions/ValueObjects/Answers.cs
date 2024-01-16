@@ -2,8 +2,16 @@
 
 namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
-public sealed record Answers(CorrectAnswer CorrectAnswer, WrongAnswers WrongAnswers)
+public sealed record Answers
 {
+    public CorrectAnswer CorrectAnswer { get; private init; }
+    public WrongAnswers WrongAnswers { get; private init; }
+
+    private Answers(CorrectAnswer correctAnswer, WrongAnswers wrongAnswers)
+    {
+        CorrectAnswer = correctAnswer;
+        WrongAnswers = wrongAnswers;
+    }
 
     public static Answers Create(CorrectAnswer correctAnswer, WrongAnswers wrongAnswers)
     {
