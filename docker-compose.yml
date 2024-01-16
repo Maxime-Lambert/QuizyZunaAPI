@@ -6,7 +6,7 @@ services:
     image: ${DOCKER_REGISTRY-}quizyzunaapi
     build:
       context: .
-      dockerfile: QuizyZunaAPI/Dockerfile
+      dockerfile: src/QuizyZunaAPI.Api/Dockerfile
 
   quizyzunaapi-db:
     container_name: Database

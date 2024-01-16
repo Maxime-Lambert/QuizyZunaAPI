@@ -1,8 +1,6 @@
-﻿using FluentValidation;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Application;
+namespace QuizyZunaAPI.Application;
 
 public static class ServiceDependencyInjection
 {
@@ -11,9 +9,7 @@ public static class ServiceDependencyInjection
         var assembly = typeof(ServiceDependencyInjection).Assembly;
 
         services.AddMediatR(configuration =>
-            configuration.RegisterServicesFromAssembly(assembly));
-
-        services.AddValidatorsFromAssembly(assembly);
+            configuration.RegisterServicesFromAssembly(assembly)); 
 
         return services;
     }
