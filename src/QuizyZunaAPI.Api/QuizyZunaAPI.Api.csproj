@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\core\QuizyZunaAPI.Application\QuizyZunaAPI.Application.csproj" />
-    <ProjectReference Include="..\external\QuizyZunaAPI.Infrastructure\QuizyZunaAPI.Infrastructure.csproj" />
+    <ProjectReference Include="..\external\infrastructure\QuizyZunaAPI.Persistence\QuizyZunaAPI.Persistence.csproj" />
     <ProjectReference Include="..\external\QuizyZunaAPI.Presentation\QuizyZunaAPI.Presentation.csproj" />
   </ItemGroup>
 

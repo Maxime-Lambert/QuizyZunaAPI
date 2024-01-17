@@ -5,6 +5,7 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 public sealed record Answers
 {
     public CorrectAnswer CorrectAnswer { get; private init; }
+
     public WrongAnswers WrongAnswers { get; private init; }
 
     private Answers(CorrectAnswer correctAnswer, WrongAnswers wrongAnswers)
@@ -25,7 +26,7 @@ public sealed record Answers
             throw new WrongAnswersIsNullDomainException($"{nameof(wrongAnswers)} can't be null");
         }
 
-        if (wrongAnswers.Value.Contains(correctAnswer.Value))
+        if (wrongAnswers.List.Value.Contains(correctAnswer.Value))
         {
             throw new WrongAnswersContainsCorrectAnswerDomainException($"{nameof(wrongAnswers)} can't contain {nameof(correctAnswer)}");
         }

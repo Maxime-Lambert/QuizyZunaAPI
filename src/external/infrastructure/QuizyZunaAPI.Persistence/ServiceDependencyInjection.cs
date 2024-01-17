@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace QuizyZunaAPI.Infrastructure;
+namespace QuizyZunaAPI.Persistence;
 
 public static class ServiceDependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         return services;
     }

@@ -1,35 +1,27 @@
-﻿using QuizyZunaAPI.Domain.Core;
-using QuizyZunaAPI.Domain.Questions.Enumerations;
-using QuizyZunaAPI.Domain.Questions.ValueObjects;
+﻿using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 namespace QuizyZunaAPI.Domain.Questions;
 
 public sealed class Question
 {
-    public QuestionId QuestionId { get; private init; }
+    public QuestionId Id { get; private init; }
 
-    public Title Text { get; private init; }
+    public QuestionTitle Title { get; private init; }
 
     public Answers Answers { get; private init; }
 
-    public Topics Topics { get; private init; }
+    public QuestionTags Tags { get; private init; }
 
-    public Difficulty Difficulty { get; private init; }
-
-    public Era Era { get; private init; }
-
-    private Question(QuestionId questionId, Title text, Answers answers, Topics topics, Difficulty difficulty, Era era)
+    private Question(QuestionId questionId, QuestionTitle title, Answers answers, QuestionTags tags)
     {
-        QuestionId = questionId;
-        Text = text;
-        Difficulty = difficulty;
-        Topics = topics;
+        Id = questionId;
+        Title = title;
         Answers = answers;
-        Era = era;
+        Tags = tags;
     }
 
-    public static Question Create(QuestionId questionId, Title text, Answers answers, Topics topics, Difficulty difficulty, Era era = Era.None)
+    public static Question Create(QuestionId questionId, QuestionTitle title, Answers answers, QuestionTags tags)
     {
-        return new Question(questionId, text, answers, topics, difficulty, era);
+        return new Question(questionId, title, answers, tags);
     }
 }
