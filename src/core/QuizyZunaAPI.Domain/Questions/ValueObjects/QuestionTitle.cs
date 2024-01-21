@@ -6,6 +6,8 @@ public sealed record QuestionTitle
 {
     public string Value { get; private init; }
 
+    private QuestionTitle() { }
+
     private QuestionTitle(string questionTitle)
     {
         Value = questionTitle;

@@ -9,13 +9,18 @@ namespace QuizyZunaAPI.Domain.UnitTests.Questions;
 
 public class QuestionTests
 {
-    public static TheoryData<Collection<string>> invalidWrongAnswerValues =>
+
+    public static TheoryData<Collection<WrongAnswer>> invalidWrongAnswerValues =>
         new()
         {
-            new Collection<string>(),
-            new Collection<string>() { "Answer 1" },
-            new Collection<string>() { "Answer 1", "Answer 2" },
-            new Collection<string>() { "Answer 1", "Answer 2", "Answer 3", "Answer 4" }
+            new Collection<WrongAnswer>(),
+            new Collection<WrongAnswer>() { WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 1") },
+            new Collection<WrongAnswer>() { WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 1"),
+                                            WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 2")},
+            new Collection<WrongAnswer>() { WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 1"),
+                                            WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 2"),
+                                            WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 3"),
+                                            WrongAnswer.Create(QuestionId.Create(Guid.NewGuid()), "Answer 4")}
         };
 
     [Fact]
@@ -23,17 +28,18 @@ public class QuestionTests
     {
         //Arrange
         var questionId = QuestionId.Create(Guid.NewGuid());
-        var wrongAnswersId = WrongAnswersId.Create(Guid.NewGuid());
-        var topicsId = TopicsId.Create(Guid.NewGuid());
         var title = QuestionTitle.Create("Is this a question ?");
         var correctAnswer = CorrectAnswer.Create("Yes");
-        var wrongAnswersList = WrongAnswersList.Create(["No", "Maybe", "Impossible"]);
-        var wrongAnswers = WrongAnswers.Create(wrongAnswersId, questionId, wrongAnswersList);
+        ICollection<WrongAnswer> wrongAnswersList = 
+            [WrongAnswer.Create(questionId, "No"),
+            WrongAnswer.Create(questionId, "Maybe"),
+            WrongAnswer.Create(questionId, "Impossible")];
+        var wrongAnswers = WrongAnswers.Create(wrongAnswersList);
         var answers = Answers.Create(correctAnswer, wrongAnswers);
-        var topicsList = TopicsList.Create([Topic.Literature]);
-        var topics = Topics.Create(topicsId, questionId, topicsList);
+        ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
+        var themes = Themes.Create(themesList);
         var difficulty = Difficulty.Beginner;
-        var questionTags = QuestionTags.Create(topics, difficulty);
+        var questionTags = QuestionTags.Create(themes, difficulty);
 
         //Act
         var result = Question.Create(questionId, title, answers, questionTags);
@@ -42,8 +48,8 @@ public class QuestionTests
         result.Id.Value.Should().Be(questionId.Value);
         result.Title.Value.Should().Be(title.Value);
         result.Answers.CorrectAnswer.Value.Should().Be(correctAnswer.Value);
-        result.Answers.WrongAnswers.List.Value.Should().BeEquivalentTo(wrongAnswersList.Value);
-        result.Tags.Topics.List.Value.Should().BeEquivalentTo(topicsList.Value);
+        result.Answers.WrongAnswers.Value.Should().BeEquivalentTo(wrongAnswersList);
+        result.Tags.Themes.Value.Should().BeEquivalentTo(themesList);
         result.Tags.Difficulty.Should().Be(difficulty);
         result.Tags.Era.Should().Be(Era.None);
     }
@@ -95,38 +101,40 @@ public class QuestionTests
     public void WrongAnswersList_Create_Should_ThrowException_WhenValueIsNull()
     {
         //Arrange
-        static WrongAnswersList Action() => WrongAnswersList.Create(null);
+        static WrongAnswers Action() => WrongAnswers.Create(null);
 
         //Act
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().Throw<WrongAnswersIsNullDomainException>().Which.Message.Should().Be("wrongAnswersList can't be null");
+        result.Should().Throw<WrongAnswersIsNullDomainException>().Which.Message.Should().Be("wrongAnswers can't be null");
     }
 
     [Theory]
     [MemberData(nameof(invalidWrongAnswerValues))]
-    public void WrongAnswersList_Create_Should_ThrowException_WhenValueIsInvalid(Collection<string>? wrongAnswers)
+    public void WrongAnswersList_Create_Should_ThrowException_WhenValueIsInvalid(Collection<WrongAnswer>? wrongAnswers)
     {
         //Arrange
-        WrongAnswersList Action() => WrongAnswersList.Create(wrongAnswers);
+        WrongAnswers Action() => WrongAnswers.Create(wrongAnswers);
 
         //Act
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().Throw<WrongAnswersDoesNotContainThreeElementsDomainException>().Which.Message.Should().Be("wrongAnswersList must contain 3 elements");
+        result.Should().Throw<WrongAnswersDoesNotContainThreeElementsDomainException>().Which.Message.Should().Be("wrongAnswers must contain 3 elements");
     }
 
     [Fact]
     public void Answers_Create_Should_ThrowException_WhenValueIsInvalid()
     {
         //Arrange
-        var correctAnswer = CorrectAnswer.Create("Yes");
-        var wrongAnswersList = WrongAnswersList.Create(["Yes", "Maybe", "Impossible"]);
         var questionId = QuestionId.Create(Guid.NewGuid());
-        var wrongAnswersId = WrongAnswersId.Create(Guid.NewGuid());
-        var wrongAnswers = WrongAnswers.Create(wrongAnswersId, questionId, wrongAnswersList);
+        var correctAnswer = CorrectAnswer.Create("Yes");
+        ICollection<WrongAnswer> wrongAnswersList =
+            [WrongAnswer.Create(questionId, "Yes"),
+                WrongAnswer.Create(questionId, "Maybe"),
+                WrongAnswer.Create(questionId, "Impossible")];
+        var wrongAnswers = WrongAnswers.Create(wrongAnswersList);
         Answers Action() => Answers.Create(correctAnswer, wrongAnswers);
 
         //Act
@@ -137,41 +145,15 @@ public class QuestionTests
     }
 
     [Fact]
-    public void TopicsList_Create_Should_ThrowException_WhenValueIsNull()
+    public void Themes_Create_Should_ThrowException_WhenValueIsNull()
     {
         //Arrange
-        static TopicsList Action() => TopicsList.Create(null);
+        static Themes Action() => Themes.Create(null);
 
         //Act
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().Throw<TopicsIsNullDomainException>().Which.Message.Should().Be("topicsList can't be null");
-    }
-
-    [Fact]
-    public void TopicsId_Create_Should_ThrowException_WhenValueIsNull()
-    {
-        //Arrange
-        static TopicsId Action() => TopicsId.Create(null);
-
-        //Act
-        var result = FluentActions.Invoking(Action);
-
-        //Assert
-        result.Should().Throw<TopicsIdIsNullDomainException>().Which.Message.Should().Be("topicsId can't be null");
-    }
-
-    [Fact]
-    public void WrongAnswersId_Create_Should_ThrowException_WhenValueIsNull()
-    {
-        //Arrange
-        static WrongAnswersId Action() => WrongAnswersId.Create(null);
-
-        //Act
-        var result = FluentActions.Invoking(Action);
-
-        //Assert
-        result.Should().Throw<WrongAnswersIdIsNullDomainException>().Which.Message.Should().Be("wrongAnswersId can't be null");
+        result.Should().Throw<TopicsIsNullDomainException>().Which.Message.Should().Be("themes can't be null");
     }
 }

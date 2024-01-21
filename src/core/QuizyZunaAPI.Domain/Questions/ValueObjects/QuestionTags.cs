@@ -4,21 +4,23 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record QuestionTags
 {
-    public Topics Topics { get; private init; }
+    public Themes Themes { get; private init; }
 
     public Difficulty Difficulty { get; private init; }
 
     public Era Era { get; private init; }
 
-    private QuestionTags(Topics topics, Difficulty difficulty, Era era)
+    private QuestionTags() { }
+
+    private QuestionTags(Themes themes, Difficulty difficulty, Era era)
     {
-        Topics = topics;
+        Themes = themes;
         Difficulty = difficulty;
         Era = era;
     }
 
-    public static QuestionTags Create(Topics topics, Difficulty difficulty, Era era = Era.None)
+    public static QuestionTags Create(Themes themes, Difficulty difficulty, Era era = Enumerations.Era.None)
     {
-        return new(topics, difficulty, era);
+        return new(themes, difficulty, era);
     }
 }

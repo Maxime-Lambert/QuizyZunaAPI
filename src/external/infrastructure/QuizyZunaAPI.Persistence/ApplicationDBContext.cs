@@ -1,21 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using QuizyZunaAPI.Application;
+using QuizyZunaAPI.Domain.Questions;
+using QuizyZunaAPI.Domain.Questions.Enumerations;
+
 namespace QuizyZunaAPI.Persistence;
 
-public sealed class ApplicationDBContext : DbContext
+public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IUnitOfWork
 {
+    public DbSet<Question> Questions { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql();
-        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        if(modelBuilder is not null)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);
-            base.OnModelCreating(modelBuilder);
-        }
+        modelBuilder.HasPostgresEnum<Difficulty>();
+        modelBuilder.HasPostgresEnum<Era>();
+        modelBuilder.HasPostgresEnum<Topic>();
+        modelBuilder?.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

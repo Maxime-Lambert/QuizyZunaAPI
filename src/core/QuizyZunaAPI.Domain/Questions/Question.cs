@@ -4,24 +4,28 @@ namespace QuizyZunaAPI.Domain.Questions;
 
 public sealed class Question
 {
-    public QuestionId Id { get; private init; }
+    public QuestionId Id { get; set; }
 
-    public QuestionTitle Title { get; private init; }
+    public QuestionTitle Title { get; set; }
 
-    public Answers Answers { get; private init; }
+    public Answers Answers { get; set; }
 
-    public QuestionTags Tags { get; private init; }
+    public QuestionTags Tags { get; set; }
 
-    private Question(QuestionId questionId, QuestionTitle title, Answers answers, QuestionTags tags)
+    private Question()
     {
-        Id = questionId;
+    }
+
+    private Question(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags)
+    {
+        Id = id;
         Title = title;
         Answers = answers;
         Tags = tags;
     }
 
-    public static Question Create(QuestionId questionId, QuestionTitle title, Answers answers, QuestionTags tags)
+    public static Question Create(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags)
     {
-        return new Question(questionId, title, answers, tags);
+        return new Question(id, title, answers, tags);
     }
 }

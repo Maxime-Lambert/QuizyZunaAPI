@@ -6,6 +6,8 @@ public sealed record QuestionId
 {
     public Guid Value { get; private init; }
 
+    private QuestionId() { }
+
     private QuestionId(Guid questionId)
     {
         Value = questionId;

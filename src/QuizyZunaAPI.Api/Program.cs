@@ -12,10 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services
-    .AddApplication()
-    .AddPersistence()
-    .AddPresentation();
+builder.Services.AddPersistence()
+                .AddApplication()
+                .AddPresentation();
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -32,17 +31,18 @@ app.UseHttpsRedirection();
 app.MapGet("/questions", () =>
 {
     var questionId = QuestionId.Create(Guid.NewGuid());
-    var wrongAnswersId = WrongAnswersId.Create(Guid.NewGuid());
-    var topicsId = TopicsId.Create(Guid.NewGuid());
     var title = QuestionTitle.Create("Is this a question ?");
     var correctAnswer = CorrectAnswer.Create("Yes");
-    var wrongAnswersList = WrongAnswersList.Create(["No", "Maybe", "Impossible"]);
-    var wrongAnswers = WrongAnswers.Create(wrongAnswersId, questionId, wrongAnswersList);
+    ICollection<WrongAnswer> wrongAnswersList =
+        [WrongAnswer.Create(questionId, "No"),
+            WrongAnswer.Create(questionId, "Maybe"),
+            WrongAnswer.Create(questionId, "Impossible")];
+    var wrongAnswers = WrongAnswers.Create(wrongAnswersList);
     var answers = Answers.Create(correctAnswer, wrongAnswers);
-    var topicsList = TopicsList.Create([Topic.Literature]);
-    var topics = Topics.Create(topicsId, questionId, topicsList);
+    ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
+    var themes = Themes.Create(themesList);
     var difficulty = Difficulty.Beginner;
-    var questionTags = QuestionTags.Create(topics, difficulty);
+    var questionTags = QuestionTags.Create(themes, difficulty);
 
     return Question.Create(questionId, title, answers, questionTags);
 })

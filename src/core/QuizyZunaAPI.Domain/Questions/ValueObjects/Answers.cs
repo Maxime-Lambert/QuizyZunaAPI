@@ -8,6 +8,8 @@ public sealed record Answers
 
     public WrongAnswers WrongAnswers { get; private init; }
 
+    private Answers() { }
+
     private Answers(CorrectAnswer correctAnswer, WrongAnswers wrongAnswers)
     {
         CorrectAnswer = correctAnswer;
@@ -26,7 +28,7 @@ public sealed record Answers
             throw new WrongAnswersIsNullDomainException($"{nameof(wrongAnswers)} can't be null");
         }
 
-        if (wrongAnswers.List.Value.Contains(correctAnswer.Value))
+        if (wrongAnswers.ContainsCorrectAnswer(correctAnswer))
         {
             throw new WrongAnswersContainsCorrectAnswerDomainException($"{nameof(wrongAnswers)} can't contain {nameof(correctAnswer)}");
         }

@@ -6,6 +6,8 @@ public sealed record CorrectAnswer
 {
     public string Value { get; private init; }
 
+    private CorrectAnswer() { }
+
     private CorrectAnswer(string correctAnswer)
     {
         Value = correctAnswer;

@@ -4,7 +4,7 @@ namespace QuizyZunaAPI.Presentation;
 
 public static class ServiceDependencyInjection
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection services)
+    public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         return services;
     }
