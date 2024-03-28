@@ -21,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "�
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D28350DF-8B0F-4B0B-B568-E1B8673F1DAC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Application", "src\core\QuizyZunaAPI.Application\QuizyZunaAPI.Application.csproj", "{94FB164D-99F2-49AB-BC92-3C873173DDC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Domain", "src\core\QuizyZunaAPI.Domain\QuizyZunaAPI.Domain.csproj", "{5668E880-6CF8-4B1E-BA85-EAA986F2B22F}"
@@ -31,11 +29,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Presentation",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Api", "src\QuizyZunaAPI.Api\QuizyZunaAPI.Api.csproj", "{7E102ECC-D2EE-40B1-9BE6-9A04DA3677D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizyZunaAPI.Domain.UnitTests", "tests\QuizyZunaAPI.Domain.UnitTests\QuizyZunaAPI.Domain.UnitTests.csproj", "{A1C5206A-5E87-42EC-80BB-456032DB66AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Domain.UnitTests", "tests\QuizyZunaAPI.Domain.UnitTests\QuizyZunaAPI.Domain.UnitTests.csproj", "{A1C5206A-5E87-42EC-80BB-456032DB66AE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{6C56BDE9-CC5E-4034-A3AE-C4CB435B1802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizyZunaAPI.Persistence", "src\external\infrastructure\QuizyZunaAPI.Persistence\QuizyZunaAPI.Persistence.csproj", "{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Persistence", "src\external\infrastructure\QuizyZunaAPI.Persistence\QuizyZunaAPI.Persistence.csproj", "{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F4D69595-4894-4B9E-BF8B-99CBA3A432E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Application.IntegrationTests", "tests\QuizyZunaAPI.Application.IntegrationTests\QuizyZunaAPI.Application.IntegrationTests.csproj", "{FB56D0C1-3686-4AA7-83CB-65D2B04C510D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Application.UnitTests", "tests\QuizyZunaAPI.Application.UnitTests\QuizyZunaAPI.Application.UnitTests.csproj", "{34E79F9F-12F7-4F55-929C-7F46C39088DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizyZunaAPI.Api.FunctionalTests", "tests\QuizyZunaAPI.Api.FunctionalTests\QuizyZunaAPI.Api.FunctionalTests.csproj", "{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +49,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D28350DF-8B0F-4B0B-B568-E1B8673F1DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D28350DF-8B0F-4B0B-B568-E1B8673F1DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D28350DF-8B0F-4B0B-B568-E1B8673F1DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D28350DF-8B0F-4B0B-B568-E1B8673F1DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94FB164D-99F2-49AB-BC92-3C873173DDC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94FB164D-99F2-49AB-BC92-3C873173DDC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94FB164D-99F2-49AB-BC92-3C873173DDC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,6 +73,22 @@ Global
 		{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D69595-4894-4B9E-BF8B-99CBA3A432E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D69595-4894-4B9E-BF8B-99CBA3A432E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D69595-4894-4B9E-BF8B-99CBA3A432E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D69595-4894-4B9E-BF8B-99CBA3A432E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB56D0C1-3686-4AA7-83CB-65D2B04C510D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB56D0C1-3686-4AA7-83CB-65D2B04C510D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB56D0C1-3686-4AA7-83CB-65D2B04C510D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB56D0C1-3686-4AA7-83CB-65D2B04C510D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E79F9F-12F7-4F55-929C-7F46C39088DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E79F9F-12F7-4F55-929C-7F46C39088DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E79F9F-12F7-4F55-929C-7F46C39088DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E79F9F-12F7-4F55-929C-7F46C39088DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +103,9 @@ Global
 		{A1C5206A-5E87-42EC-80BB-456032DB66AE} = {FA6FC187-68A8-4D97-9124-0F805ED56B73}
 		{6C56BDE9-CC5E-4034-A3AE-C4CB435B1802} = {1B1884B4-E472-4BB1-A725-E055E6B0CC19}
 		{E7AC8B8F-811A-43CC-B7CB-253278A4EF8C} = {6C56BDE9-CC5E-4034-A3AE-C4CB435B1802}
+		{FB56D0C1-3686-4AA7-83CB-65D2B04C510D} = {FA6FC187-68A8-4D97-9124-0F805ED56B73}
+		{34E79F9F-12F7-4F55-929C-7F46C39088DA} = {FA6FC187-68A8-4D97-9124-0F805ED56B73}
+		{E0932410-9A21-4DDC-BE10-D79BEDA3D4A5} = {FA6FC187-68A8-4D97-9124-0F805ED56B73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2E32AA0-9F4D-4882-B93B-09D2702E691D}

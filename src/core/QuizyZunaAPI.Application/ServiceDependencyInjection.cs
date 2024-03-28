@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+
+using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 namespace QuizyZunaAPI.Application;
 
@@ -10,6 +13,10 @@ public static class ServiceDependencyInjection
 
         services.AddMediatR(configuration =>
             configuration.RegisterServicesFromAssembly(assembly)); 
+
+        services.AddValidatorsFromAssembly(assembly);
+
+        services.AddTransient(typeof(IPipelineBehavior<,>),typeof(RequestLoggingPipelineBehavior<,>));
 
         return services;
     }

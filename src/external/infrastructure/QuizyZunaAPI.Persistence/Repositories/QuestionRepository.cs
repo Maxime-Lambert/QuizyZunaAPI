@@ -9,28 +9,28 @@ internal sealed class QuestionRepository(ApplicationDbContext context) : IQuesti
 {
     private readonly ApplicationDbContext _context = context;
 
-    public void Add(Question question)
+    public async Task AddAsync(Question question)
     {
-        throw new NotImplementedException();
+        await _context.Questions.AddAsync(question);
     }
 
     public void Delete(Question question)
     {
-        throw new NotImplementedException();
+        _context.Questions.Remove(question);
     }
 
-    public IEnumerable<Question> GetAll()
+    public Task<Question?> GetByIdAsync(QuestionId questionId, CancellationToken cancellationToken)
     {
-        return _context.Questions.AsEnumerable();
+        return _context.Questions.SingleOrDefaultAsync(question => question.Id == questionId, cancellationToken);
     }
 
-    public Task<Question?> GetByIdAsync(QuestionId questionId)
+    public Task<List<Question>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return _context.Questions.SingleOrDefaultAsync(question => question.Id == questionId);
+        return _context.Questions.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     public void Update(Question question)
     {
-        throw new NotImplementedException();
+        _context.Questions.Update(question);
     }
 }

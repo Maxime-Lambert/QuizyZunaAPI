@@ -12,20 +12,15 @@ public sealed class Question
 
     public QuestionTags Tags { get; set; }
 
-    private Question()
-    {
-    }
-
-    private Question(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags)
-    {
-        Id = id;
-        Title = title;
-        Answers = answers;
-        Tags = tags;
-    }
+    private Question() { }
 
     public static Question Create(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags)
     {
-        return new Question(id, title, answers, tags);
+        return new Question {
+            Id = id,
+            Title = title,
+            Answers = answers,
+            Tags = tags
+        };
     }
 }

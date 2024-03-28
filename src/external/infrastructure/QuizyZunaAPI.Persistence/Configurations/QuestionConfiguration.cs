@@ -14,11 +14,11 @@ internal sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
 
         builder.Property(question => question.Id).HasConversion(
             questionId => questionId!.Value,
-            value => QuestionId.Create(value));
+            value => new QuestionId(value));
 
         builder.Property(question => question.Title).HasConversion(
             title => title!.Value,
-            value => QuestionTitle.Create(value));
+            value => new QuestionTitle(value));
 
         builder.OwnsOne(question => question.Answers, answersBuilder =>
         {
@@ -30,7 +30,7 @@ internal sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
             });
             answersBuilder.Property(answers => answers.CorrectAnswer).HasConversion(
                             correctAnswer => correctAnswer!.Value,
-                            value => CorrectAnswer.Create(value));
+                            value => new CorrectAnswer(value));
         });
 
         builder.OwnsOne(question => question.Tags, tagsBuilder =>

@@ -8,18 +8,13 @@ public sealed record CorrectAnswer
 
     private CorrectAnswer() { }
 
-    private CorrectAnswer(string correctAnswer)
+    public CorrectAnswer(string correctAnswer)
     {
-        Value = correctAnswer;
-    }
-
-    public static CorrectAnswer Create(string? correctAnswer)
-    {
-        if (string.IsNullOrEmpty(correctAnswer))
+        if(string.IsNullOrEmpty(correctAnswer))
         {
-            throw new CorrectAnswerIsNullDomainException($"{nameof(correctAnswer)} can't be null");
+            throw new CorrectAnswerIsEmptyDomainException($"{nameof(correctAnswer)} can't be null");
         }
 
-        return new CorrectAnswer(correctAnswer);
+        Value = correctAnswer;
     }
 };

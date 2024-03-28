@@ -4,13 +4,13 @@ namespace QuizyZunaAPI.Domain.Questions;
 
 public interface IQuestionRepository
 {
-    Task<Question?> GetByIdAsync(QuestionId questionId);
+    public Task AddAsync(Question question);
 
-    IEnumerable<Question> GetAll();
+    public void Delete(Question question);
 
-    void Add(Question question);
+    public void Update(Question question);
 
-    void Delete(Question question);
+    public Task<Question?> GetByIdAsync(QuestionId questionId, CancellationToken cancellationToken);
 
-    void Update(Question question);
+    public Task<List<Question>> GetAllAsync(CancellationToken cancellationToken);
 }

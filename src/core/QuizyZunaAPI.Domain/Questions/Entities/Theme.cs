@@ -1,7 +1,7 @@
 ﻿using QuizyZunaAPI.Domain.Questions.Enumerations;
 using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
-namespace QuizyZunaAPI.Domain.Questions;
+namespace QuizyZunaAPI.Domain.Questions.Entities;
 
 public sealed class Theme
 {
@@ -11,14 +11,12 @@ public sealed class Theme
 
     private Theme() { }
 
-    private Theme(QuestionId questionId, Topic topic)
-    {
-        QuestionId = questionId;
-        Value = topic;
-    }
-
     public static Theme Create(QuestionId questionId, Topic topic)
     {
-        return new Theme(questionId, topic);
+        return new Theme
+        {
+            QuestionId = questionId,
+            Value = topic
+        };
     }
 }

@@ -1,39 +1,31 @@
-﻿using QuizyZunaAPI.Domain.Questions.Exceptions;
+﻿using QuizyZunaAPI.Domain.Questions.Entities;
+using QuizyZunaAPI.Domain.Questions.Exceptions;
 
 namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record WrongAnswers
 {
+    private const int EXACT_NUMBER_OF_WRONGANSWERS = 3;
+
     public IReadOnlyCollection<WrongAnswer> Value { get; private init; }
 
     private WrongAnswers() { }
 
-    private WrongAnswers(ICollection<WrongAnswer> wrongAnswers)
+    public WrongAnswers(ICollection<WrongAnswer> wrongAnswers)
     {
+        if(wrongAnswers.Count != EXACT_NUMBER_OF_WRONGANSWERS)
+        {
+            throw new WrongAnswersDoesNotContainThreeElementsDomainException($"{nameof(wrongAnswers)} must contain {EXACT_NUMBER_OF_WRONGANSWERS} elements");
+        }
+
         Value = [.. wrongAnswers];
     }
 
-    public static WrongAnswers Create(ICollection<WrongAnswer>? wrongAnswers)
+    public void ThrowExceptionIfCorrectAnswerIsPresent(CorrectAnswer correctAnswer)
     {
-        if (wrongAnswers is null)
+        if(Value.Select(wrongAnswer => wrongAnswer.Value).Contains(correctAnswer.Value))
         {
-            throw new WrongAnswersIsNullDomainException($"{nameof(wrongAnswers)} can't be null");
-        }
-
-        if (wrongAnswers.Count != 3)
-        {
-            throw new WrongAnswersDoesNotContainThreeElementsDomainException($"{nameof(wrongAnswers)} must contain 3 elements");
-        }
-
-        return new WrongAnswers(wrongAnswers);
-    }
-
-    public bool ContainsCorrectAnswer(CorrectAnswer correctAnswer)
-    {
-        if(correctAnswer is null)
-        {
-            return false;
-        }
-        return Value!.Select(wrongAnswer => wrongAnswer.Value).Contains(correctAnswer.Value);
+            throw new WrongAnswersContainsCorrectAnswerDomainException($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
+        } 
     }
 }

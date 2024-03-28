@@ -12,15 +12,10 @@ public sealed record QuestionTags
 
     private QuestionTags() { }
 
-    private QuestionTags(Themes themes, Difficulty difficulty, Era era)
+    public QuestionTags(Themes themes, Difficulty difficulty, Era era)
     {
         Themes = themes;
         Difficulty = difficulty;
         Era = era;
-    }
-
-    public static QuestionTags Create(Themes themes, Difficulty difficulty, Era era = Enumerations.Era.None)
-    {
-        return new(themes, difficulty, era);
     }
 }

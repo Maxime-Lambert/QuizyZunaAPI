@@ -8,18 +8,13 @@ public sealed record QuestionTitle
 
     private QuestionTitle() { }
 
-    private QuestionTitle(string questionTitle)
+    public QuestionTitle(string questionTitle)
     {
-        Value = questionTitle;
-    }
-
-    public static QuestionTitle Create(string? questionTitle)
-    {
-        if(string.IsNullOrEmpty(questionTitle))
+        if (string.IsNullOrEmpty(questionTitle))
         {
-            throw new TitleIsNullDomainException($"{nameof(questionTitle)} can't be null");
+            throw new TitleIsEmptyDomainException($"{nameof(questionTitle)} can't be null");
         }
 
-        return new QuestionTitle(questionTitle);
+        Value = questionTitle;
     }
 }

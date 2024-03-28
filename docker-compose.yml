@@ -1,13 +1,6 @@
 version: '3.4'
 
 services:
-  quizyzunaapi:
-    container_name: API
-    image: ${DOCKER_REGISTRY-}quizyzunaapi
-    build:
-      context: .
-      dockerfile: src/QuizyZunaAPI.Api/Dockerfile
-
   quizyzunaapi-db:
     container_name: Database
     image: postgres:alpine
@@ -20,3 +13,10 @@ services:
       - 5432:5432
     volumes:
       - ./.containers/database:/var/lib/postgressql/data
+
+  quizyzunaapi.api:
+    container_name: API
+    image: ${DOCKER_REGISTRY-}quizyzunaapi
+    build:
+      context: .
+      dockerfile: src/QuizyZunaAPI.Api/Dockerfile

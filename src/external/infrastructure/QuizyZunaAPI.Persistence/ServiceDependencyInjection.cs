@@ -3,14 +3,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using QuizyZunaAPI.Application;
+using QuizyZunaAPI.Domain.Questions;
 using QuizyZunaAPI.Persistence.Options;
+using QuizyZunaAPI.Persistence.Repositories;
 
 namespace QuizyZunaAPI.Persistence;
 
 public static class ServiceDependencyInjection
 {
-    private const string PersistenceAssemblyName = "QuizyZunaAPI.Persistence";
-
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
         services.ConfigureOptions<DatabaseOptionsSetup>();
@@ -23,13 +23,14 @@ public static class ServiceDependencyInjection
             {
                 npgsqlOptionsAction.CommandTimeout(databaseOptions.CommandTimeout);
                 npgsqlOptionsAction.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
-                npgsqlOptionsAction.MigrationsAssembly(PersistenceAssemblyName);
             });
             dbContextOptionsBuilder.EnableDetailedErrors(databaseOptions.EnableDetailedErrors);
             dbContextOptionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging);
+            dbContextOptionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
-        services.AddScoped<IUnitOfWork, ApplicationDbContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
 
         return services;
     }

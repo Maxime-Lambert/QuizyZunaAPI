@@ -1,4 +1,4 @@
-﻿using QuizyZunaAPI.Domain.Questions.Enumerations;
+﻿using QuizyZunaAPI.Domain.Questions.Entities;
 using QuizyZunaAPI.Domain.Questions.Exceptions;
 
 namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
@@ -9,18 +9,13 @@ public sealed record Themes
 
     private Themes() { }
 
-    private Themes(IEnumerable<Theme> themes)
+    public Themes(IEnumerable<Theme> themes)
     {
-        Value = [.. themes];
-    }
-
-    public static Themes Create(IEnumerable<Theme>? themes)
-    {
-        if (themes is null)
+        if(!themes.Any())
         {
-            throw new TopicsIsNullDomainException($"{nameof(themes)} can't be null");
+            throw new ThemesIsEmptyDomainException($"{nameof(themes)} can't be null");
         }
 
-        return new Themes(themes);
+        Value = [.. themes];
     }
 }
