@@ -35,6 +35,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
+          path: /home/runner/work/QuizyZunaAPI/QuizyZunaAPI/src/QuizyZunaAPI.Api/bin/Release/net8.0/publish/
 
   deploy:
     runs-on: ubuntu-latest
