@@ -17,7 +17,7 @@ public class GetByIdQuestionTests(FunctionalTestWebAppFactory functionalTestWebA
                 "Novice", "Antiquity", ["Literature", "Mangas"]);
         var createResponse = await HttpClient.PostAsJsonAsync(BaseApiUrl, createRequest);
         var createContent = await createResponse.Content.ReadFromJsonAsync<QuestionResponse>();
-        var createdQuestionId = createContent.id;
+        var createdQuestionId = createContent!.id;
         GetQuestionByIdQuery request = new(createdQuestionId);
         var requestPath = new Uri(BaseApiUrl, request.questionid.ToString());
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using QuizyZunaAPI.Presentation;
 
 namespace QuizyZunaAPI.Api.Middlewares.ExceptionHandlers;
 
@@ -13,9 +14,10 @@ public sealed class GeneralExceptionHandler(ILogger<GeneralExceptionHandler> log
 
     public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogError(exception,
-            "Exception occurred: {Message}",
-            exception.Message);
+        ArgumentNullException.ThrowIfNull(httpContext);
+        ArgumentNullException.ThrowIfNull(exception);
+
+        _logger.LogException(exception.Message);
 
         var problemDetails = new ProblemDetails
         {

@@ -15,9 +15,11 @@ public sealed class CreateQuestionCommandHandler(IUnitOfWork caca, IQuestionRepo
 
     public async Task<QuestionResponse> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)
     {
-        await _questionRepository.AddAsync(request.question);
+        ArgumentNullException.ThrowIfNull(request);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _questionRepository.AddAsync(request.question).ConfigureAwait(true);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
 
         return request.question.ToResponse();
     }

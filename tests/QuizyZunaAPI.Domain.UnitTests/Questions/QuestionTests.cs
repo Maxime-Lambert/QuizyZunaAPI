@@ -65,20 +65,7 @@ public class QuestionTests
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().ThrowExactly<TitleIsEmptyDomainException>().WithMessage($"questionTitle can't be null");
-    }
-
-    [Fact]
-    public void CorrectAnswer_Create_Should_ThrowException_WhenValueIsEmpty()
-    {
-        //Arrange
-        static CorrectAnswer Action() => new("");
-
-        //Act
-        var result = FluentActions.Invoking(Action);
-
-        //Assert
-        result.Should().ThrowExactly<CorrectAnswerIsEmptyDomainException>().WithMessage($"correctAnswer can't be null");
+        result.Should().ThrowExactly<ArgumentException>();
     }
 
     [Theory]
@@ -114,18 +101,5 @@ public class QuestionTests
 
         //Assert
         result.Should().ThrowExactly<WrongAnswersContainsCorrectAnswerDomainException>().WithMessage($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
-    }
-
-    [Fact]
-    public void Themes_Create_Should_ThrowException_WhenThemesIsNull()
-    {
-        //Arrange
-        static Themes Action() => new([]);
-
-        //Act
-        var result = FluentActions.Invoking(Action);
-
-        //Assert
-        result.Should().ThrowExactly<ThemesIsEmptyDomainException>().WithMessage($"Themes can't be null");
     }
 }

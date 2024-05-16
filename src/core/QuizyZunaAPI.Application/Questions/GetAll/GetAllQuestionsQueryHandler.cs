@@ -16,7 +16,9 @@ public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepo
 
     public async Task<IEnumerable<QuestionWithoutIdResponse>> Handle(GetAllQuestionsQuery request, CancellationToken cancellationToken)
     {
-        var questions = await _questionRepository.GetAllAsync(cancellationToken);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var questions = await _questionRepository.GetAllAsync(cancellationToken).ConfigureAwait(true);
 
         var numberOfQuestions = DEFAULT_NUMBER_OF_QUESTIONS_PER_QUERY;
 

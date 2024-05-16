@@ -2,7 +2,7 @@
 
 namespace QuizyZunaAPI.Persistence;
 
-internal sealed class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
+public sealed class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
 {
     private readonly ApplicationDbContext _context = context;
 

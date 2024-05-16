@@ -1,22 +1,31 @@
 version: '3.4'
 
 services:
-  quizyzunaapi-db:
+  quizyzuna-db:
     container_name: Database
     image: postgres:alpine
-    restart: unless-stopped
+    restart: always
     environment:
-      - POSTGRES_DB=quizyzuna-db
+      - POSTGRES_DB=quizyzunadb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - 5432:5432
     volumes:
       - ./.containers/database:/var/lib/postgressql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  quizyzunaapi.api:
+  quizyzuna-api:
     container_name: API
     image: ${DOCKER_REGISTRY-}quizyzunaapi
     build:
-      context: .
-      dockerfile: src/QuizyZunaAPI.Api/Dockerfile
+      context: src/
+    depends_on:
+        quizyzuna-db:
+          condition: service_healthy
+    ports:
+        - 8081:8081

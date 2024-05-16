@@ -22,7 +22,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        response.Headers.First(header => header.Key == "Location").Value.First().Should().Be($"{BaseApiUrl}{content.id}");
+        response.Headers.First(header => header.Key == "Location").Value.First().Should().Be($"{BaseApiUrl}{content!.id}");
     }
 
     [Fact]

@@ -12,12 +12,14 @@ public sealed class DeleteQuestionCommandHandler(IQuestionRepository questionRep
 
     public async Task Handle(DeleteQuestionCommand request, CancellationToken cancellationToken)
     {
-        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionId), cancellationToken);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionId), cancellationToken).ConfigureAwait(true);
         
         if(question is not null)
         {
             _questionRepository.Delete(question);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
         }
     }
 }

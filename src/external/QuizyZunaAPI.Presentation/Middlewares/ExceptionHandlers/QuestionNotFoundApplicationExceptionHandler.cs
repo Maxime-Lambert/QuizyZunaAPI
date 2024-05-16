@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using QuizyZunaAPI.Application.Questions.Exceptions;
+using QuizyZunaAPI.Presentation;
 
 namespace QuizyZunaAPI.Api.Middlewares.ExceptionHandlers;
 
@@ -15,14 +16,15 @@ public sealed class QuestionNotFoundApplicationExceptionHandler(ILogger<Question
 
     public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(httpContext);
+        ArgumentNullException.ThrowIfNull(exception);
+
         if (exception is not QuestionNotFoundApplicationException)
         {
             return ValueTask.FromResult(false);
         }
 
-        _logger.LogError(exception,
-            "Exception occurred: {Message}",
-            exception.Message);
+        _logger.LogException(exception.Message);
 
         var problemDetails = new ProblemDetails
         {

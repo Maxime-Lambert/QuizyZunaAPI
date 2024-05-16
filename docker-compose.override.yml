@@ -1,12 +1,12 @@
 version: '3.4'
 
 services:
-  quizyzunaapi.api:
+  quizyzuna-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Host=Database;Username=postgres;Password=postgres;Database=quizyzuna-db
+      - ConnectionStrings__Database=Host=Database;Username=postgres;Password=postgres;Database=quizyzunadb;
     ports:
       - "8080"
       - "8081"

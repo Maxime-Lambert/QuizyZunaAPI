@@ -20,7 +20,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
                 "Novice", "Antiquity", ["Literature", "Mangas"]);
         var createResponse = await HttpClient.PostAsJsonAsync(BaseApiUrl, createRequest);
         var createContent = await createResponse.Content.ReadFromJsonAsync<QuestionResponse>();
-        var createdQuestionId = createContent.id;
+        var createdQuestionId = createContent!.id;
         var requestPath = new Uri(BaseApiUrl, createdQuestionId.ToString());
 
         //Act

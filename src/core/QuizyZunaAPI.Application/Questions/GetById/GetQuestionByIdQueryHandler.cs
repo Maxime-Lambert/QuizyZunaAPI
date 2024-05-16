@@ -14,7 +14,9 @@ public sealed class GetQuestionByIdQueryHandler(IQuestionRepository questionRepo
 
     public async Task<QuestionResponse> Handle(GetQuestionByIdQuery request, CancellationToken cancellationToken)
     {
-        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionid), cancellationToken);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionid), cancellationToken).ConfigureAwait(true);
 
         if(question is null)
         {

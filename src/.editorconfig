@@ -21,16 +21,12 @@ tab_width = 4
 end_of_line = crlf
 insert_final_newline = false
 
+[Migrations/*]
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1707.severity = none
+
 #### .NET Coding Conventions ####
 [*.{cs,vb}]
-dotnet_diagnostic.CA1812.severity = none
-# CS8618: Un champ non-nullable doit contenir une valeur non-null lors de la fermeture du constructeur. Envisagez de déclarer le champ comme nullable.
-dotnet_diagnostic.CS8618.severity = none
-dotnet_diagnostic.CS8602.severity = none
-dotnet_diagnostic.CA2007.severity = none
-dotnet_diagnostic.CA1032.severity = none
-dotnet_diagnostic.CA1062.severity = none
-dotnet_diagnostic.CA1848.severity = none
 
 # Organize usings
 dotnet_separate_import_directive_groups = true

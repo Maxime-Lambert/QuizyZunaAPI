@@ -7,12 +7,14 @@ public sealed record WrongAnswers
 {
     private const int EXACT_NUMBER_OF_WRONGANSWERS = 3;
 
-    public IReadOnlyCollection<WrongAnswer> Value { get; private init; }
+    public IReadOnlyCollection<WrongAnswer> Value { get; private init; } = new List<WrongAnswer>();
 
     private WrongAnswers() { }
 
     public WrongAnswers(ICollection<WrongAnswer> wrongAnswers)
     {
+        ArgumentNullException.ThrowIfNull(wrongAnswers);
+
         if(wrongAnswers.Count != EXACT_NUMBER_OF_WRONGANSWERS)
         {
             throw new WrongAnswersDoesNotContainThreeElementsDomainException($"{nameof(wrongAnswers)} must contain {EXACT_NUMBER_OF_WRONGANSWERS} elements");
@@ -23,7 +25,9 @@ public sealed record WrongAnswers
 
     public void ThrowExceptionIfCorrectAnswerIsPresent(CorrectAnswer correctAnswer)
     {
-        if(Value.Select(wrongAnswer => wrongAnswer.Value).Contains(correctAnswer.Value))
+        ArgumentNullException.ThrowIfNull(correctAnswer);
+
+        if (Value.Select(wrongAnswer => wrongAnswer.Value).Contains(correctAnswer.Value))
         {
             throw new WrongAnswersContainsCorrectAnswerDomainException($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
         } 

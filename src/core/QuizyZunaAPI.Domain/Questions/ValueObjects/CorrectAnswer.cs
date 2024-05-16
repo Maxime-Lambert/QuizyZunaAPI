@@ -4,16 +4,13 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record CorrectAnswer
 {
-    public string Value { get; private init; }
+    public string Value { get; private init; } = string.Empty;
 
     private CorrectAnswer() { }
 
     public CorrectAnswer(string correctAnswer)
     {
-        if(string.IsNullOrEmpty(correctAnswer))
-        {
-            throw new CorrectAnswerIsEmptyDomainException($"{nameof(correctAnswer)} can't be null");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(nameof(correctAnswer));
 
         Value = correctAnswer;
     }

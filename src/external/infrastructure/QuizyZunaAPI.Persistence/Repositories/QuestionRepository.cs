@@ -5,13 +5,13 @@ using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 namespace QuizyZunaAPI.Persistence.Repositories;
 
-internal sealed class QuestionRepository(ApplicationDbContext context) : IQuestionRepository
+public sealed class QuestionRepository(ApplicationDbContext context) : IQuestionRepository
 {
     private readonly ApplicationDbContext _context = context;
 
     public async Task AddAsync(Question question)
     {
-        await _context.Questions.AddAsync(question);
+        await _context.Questions.AddAsync(question).ConfigureAwait(true);
     }
 
     public void Delete(Question question)

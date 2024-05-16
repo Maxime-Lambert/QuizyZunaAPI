@@ -27,11 +27,11 @@ public static class QuestionsEndpoints
         {
             var request = new GetAllQuestionsQuery(numberOfQuestions, difficulties, eras, themes);
 
-            var validationResult = await validator.ValidateAsync(request, default);
+            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request);
+                var result = await sender.Send(request).ConfigureAwait(true);
 
                 return Results.Ok(result);
             }
@@ -44,7 +44,7 @@ public static class QuestionsEndpoints
 
         questionEndpoints.MapGet("/{id:guid}", async (Guid id, ISender sender) =>
         {
-            var question = await sender.Send(new GetQuestionByIdQuery(id));
+            var question = await sender.Send(new GetQuestionByIdQuery(id)).ConfigureAwait(true);
 
             return Results.Ok(question);
         })
@@ -55,11 +55,11 @@ public static class QuestionsEndpoints
         questionEndpoints.MapPost("", async (CreateQuestionRequest request, IValidator<CreateQuestionRequest> validator,
             ISender sender, HttpContext context) =>
         {
-            var validationResult = await validator.ValidateAsync(request, default);
+            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request.ToCommand());
+                var result = await sender.Send(request.ToCommand()).ConfigureAwait(true);
 
                 return Results.CreatedAtRoute("GetQuestion", new { result.id }, result);
             }
@@ -73,11 +73,11 @@ public static class QuestionsEndpoints
         questionEndpoints.MapPut("/{id:guid}", async (Guid id, PutQuestionRequest request, IValidator<PutQuestionRequest> validator,
             ISender sender) =>
         {
-            var validationResult = await validator.ValidateAsync(request, default);
+            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request.ToCommand(id));
+                var result = await sender.Send(request.ToCommand(id)).ConfigureAwait(true);
 
                 return Results.Ok(result);
             }
@@ -90,7 +90,7 @@ public static class QuestionsEndpoints
 
         questionEndpoints.MapDelete("/{id:guid}", async (Guid id, ISender sender) =>
         {
-            await sender.Send(new DeleteQuestionCommand(id));
+            await sender.Send(new DeleteQuestionCommand(id)).ConfigureAwait(true);
 
             return Results.NoContent();
         })

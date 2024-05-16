@@ -5,17 +5,12 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record Themes
 {
-    public IEnumerable<Theme> Value { get; private init; }
+    public IEnumerable<Theme> Value { get; private init; } = new List<Theme>();
 
     private Themes() { }
 
     public Themes(IEnumerable<Theme> themes)
     {
-        if(!themes.Any())
-        {
-            throw new ThemesIsEmptyDomainException($"{nameof(themes)} can't be null");
-        }
-
         Value = [.. themes];
     }
 }

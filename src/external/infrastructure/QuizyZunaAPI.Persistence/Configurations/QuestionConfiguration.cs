@@ -6,10 +6,12 @@ using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 namespace QuizyZunaAPI.Persistence.Configurations;
 
-internal sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
+public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
     public void Configure(EntityTypeBuilder<Question> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.HasKey(question => question.Id);
 
         builder.Property(question => question.Id).HasConversion(

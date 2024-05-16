@@ -4,7 +4,7 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record QuestionTags
 {
-    public Themes Themes { get; private init; }
+    public Themes Themes { get; private init; } = null!;
 
     public Difficulty Difficulty { get; private init; }
 
@@ -14,6 +14,8 @@ public sealed record QuestionTags
 
     public QuestionTags(Themes themes, Difficulty difficulty, Era era)
     {
+        ArgumentNullException.ThrowIfNull(nameof(themes));
+
         Themes = themes;
         Difficulty = difficulty;
         Era = era;

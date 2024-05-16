@@ -45,13 +45,10 @@ public static class ServiceDependencyInjection
         });
 
         services.AddHealthChecks()
-            .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
+            .AddNpgSql(builder?.Configuration.GetConnectionString("Database")!);
 
-        services.AddExceptionHandler<CorrectAnswerIsEmptyDomainExceptionHandler>();
         services.AddExceptionHandler<QuestionNotFoundApplicationExceptionHandler>();
         services.AddExceptionHandler<QuestionsNotFoundWithFilersApplicationExceptionHandler>();
-        services.AddExceptionHandler<ThemesIsEmptyDomainExceptionHandler>();
-        services.AddExceptionHandler<TitleIsEmptyDomainExceptionHandler>();
         services.AddExceptionHandler<WrongAnswersContainsCorrectAnswerDomainExceptionHandler>();
         services.AddExceptionHandler<WrongAnswersDoesNotContainThreeElementsDomainExceptionHandler>();
         services.AddExceptionHandler<GeneralExceptionHandler>();

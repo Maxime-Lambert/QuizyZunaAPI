@@ -12,7 +12,9 @@ public sealed class PutQuestionCommandHandler(IQuestionRepository questionReposi
 
     public async Task<Question> Handle(PutQuestionCommand request, CancellationToken cancellationToken)
     {
-        var questionDoesNotExist = await _questionRepository.GetByIdAsync(request.question.Id, cancellationToken) is null;
+        ArgumentNullException.ThrowIfNull(request);
+
+        var questionDoesNotExist = await _questionRepository.GetByIdAsync(request.question.Id, cancellationToken).ConfigureAwait(true) is null;
 
         if(questionDoesNotExist)
         {
@@ -21,7 +23,7 @@ public sealed class PutQuestionCommandHandler(IQuestionRepository questionReposi
 
         _questionRepository.Update(request.question);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
 
         return request.question;
     }

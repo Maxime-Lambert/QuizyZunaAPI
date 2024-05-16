@@ -13,6 +13,8 @@ public static class QuestionRequestToCommandAdapter
 {
     public static CreateQuestionCommand ToCommand(this CreateQuestionRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var questionId = new QuestionId(Guid.NewGuid());
         var title = new QuestionTitle(request.title);
         var correctAnswer = new CorrectAnswer(request.correctAnswer);
@@ -29,11 +31,7 @@ public static class QuestionRequestToCommandAdapter
             themesList.Add(Theme.Create(questionId, Enum.Parse<Topic>(theme)));
         }
         var themes = new Themes(themesList);
-        var era = Era.None;
-        if (!string.IsNullOrEmpty(request.era))
-        {
-            era = Enum.Parse<Era>(request.era);
-        }
+        var era = string.IsNullOrEmpty(request.era) ? Era.None : Enum.Parse<Era>(request.era);
         var tags = new QuestionTags(themes, Enum.Parse<Difficulty>(request.difficulty), era);
 
         return new CreateQuestionCommand(Question.Create(questionId, title, answers, tags));
@@ -41,6 +39,8 @@ public static class QuestionRequestToCommandAdapter
 
     public static PutQuestionCommand ToCommand(this PutQuestionRequest request, Guid id)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         var questionId = new QuestionId(id);
         var title = new QuestionTitle(request.title);
         var correctAnswer = new CorrectAnswer(request.correctAnswer);
