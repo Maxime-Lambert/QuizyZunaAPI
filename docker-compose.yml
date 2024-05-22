@@ -6,7 +6,7 @@ services:
     image: postgres:alpine
     restart: always
     environment:
-      - POSTGRES_DB=quizyzunadb
+      - POSTGRES_DB=quizyzuna-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
@@ -27,5 +27,9 @@ services:
     depends_on:
         quizyzuna-db:
           condition: service_healthy
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Database=Host=Database;Username=postgres;Password=postgres;Database=quizyzuna-db;
     ports:
-        - 8081:8081
+      - "5215:5215"
