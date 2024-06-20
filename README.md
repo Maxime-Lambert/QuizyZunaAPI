@@ -110,7 +110,7 @@ Pour illustrer les exemples de ce chapitre, je vais me servir de **Postman** mai
   
 Le premier endpoint accessible concerne les Questions. Pour commencer à tester les différentes opérations, il faut tout d'abord commencer par créer une question à l'aide d'une requête **POST** comme sur l'image suivante. On y voit le verbe **HTTP**, l'URL de la requête ainsi que le corps de la requête avec des valeurs valides pour pouvoir créer une question.  
   
-![Requête Post sur l'endpoint questions](assets/Azure Post Question.jpg)  
+![Requête Post sur l'endpoint questions](assets/Azure_Post_Question.jpg)  
 Dans la deuxième moitié de l'image, on peut voir le corps de la réponse de l'API qui contient la question créée et on peut y retrouver l'id qui lui est associé pour pouvoir le manipuler avec les autres opérations. Sont disponibles : **GET**, **DELETE** qui ne nécessitent pas de corps de requête ainsi que **PUT** qui nécessite le même corps de requête que le **POST**. Pour effectuer ces opérations, il faut utiliser le verbe **HTTP** approprié et ajouter l'id de la question manipulée à la fin de l'URL de la requête comme ceci :  
 ```  
 https://quizyzuna-api.azurewebsites.net/api/v1/questions/<id>  
@@ -118,7 +118,7 @@ https://quizyzuna-api.azurewebsites.net/api/v1/questions/<id>
   
 Enfin, il existe un deuxième endpoint qui concerne les **Healthchecks** pour lequel le seul verbe **HTTP** autorisé est **GET** qui permet de savoir si la connexion à la base de données cloud fonctionne comme on peut observer sur l'image suivante :  
   
-![Requête Get sur l'endpoint health](assets/Azure Get Health.jpg)  
+![Requête Get sur l'endpoint health](assets/Azure_Get_Health.jpg)  
 Enfin, il est important de préciser que s'agissant d'une version gratuite des services **Azure** parfois les requêtes ne fonctionnent pas toujours. Il faut occasionnellement attendre un peu et réessayer si la réponse est un timeout.  
 
 # Continuous Integration / Continuous Deployment  
@@ -135,7 +135,7 @@ Il y a plusieurs types d'architectures modernes qui sont venus apporter leur tou
   
 La **Clean Architecture** place nos modèles de données dans une couche appelée **Domain** en tant que point central autour duquel toute l'application s'articule. On place ensuite une surcouche à notre **Domain** qu'on nommera **Application** ainsi que deux surcouches à notre **Application** qu'on nommera **Infrastructure** & **Presentation**. On peut voir apparaître les différentes couches sur le graphique ci-dessous ainsi que leurs dépendances.  
   
-![Clean Architecture Graph](assets/Clean Architecture Graph.png)  
+![Clean Architecture Graph](assets/Clean_Architecture_Graph.png)  
 Chaque couche à son propre rôle et le plus important réside dans l'inversion de dépendances pour faire en sorte que les couches principales (**Application** & **Domain**) puissent être isolées des détails d'implémentation et potentiellement réutilisables. L'intérêt réside également dans l'option de pouvoir changer si besoin des composants comme on le désire et de pouvoir tester la logique métier de manière simplifiée.  
   
 * **Domain** : Contiendra toutes nos classes métiers ainsi que les interfaces de repository. Pour modéliser le domaine, nous suivons les recommandations du **Domain Driven Design (DDD)**.  
@@ -193,7 +193,7 @@ Pour l'organisation des bibliothèques, l'homogénéité du code et le respect d
 
 Comme on peut le remarquer dans l'image ci-dessous, certains des ses fichiers ont été dupliqués dans le package test pour appliquer des règles différentes et séparer les librairies.
 
-![Clean Architecture pour QuizyZuna](assets/Folder Structure.jpg)
+![Clean Architecture pour QuizyZuna](assets/Folder_Structure.jpg)
 
 ## Structure du projet
 
