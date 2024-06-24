@@ -107,12 +107,12 @@ Ensuite, il faut :
   
 Pour illustrer les exemples de ce chapitre, je vais me servir de **Postman** mais ce n'est pas un prérequis. N'importe quel outil qui permet d'envoyer des requêtes **HTTP** peut remplacer **Postman**.  Voici un tableau récapitulatif des différents points d'entrée de l'API :
 
-| Resource           | POST                  | GET                            | PUT | DELETE           |
-| ------------------ | --------------------- | ------------------------------ | ---------------------------------------- | --- | ---------------- |
-| **/questions**      | Créé une nouvelle question | Récupère les détails de plusieurs questions         | X   |     X            |
-| **/questions/uuid**    | X                     | Récupère les détails de la question dont l'id est uuid | Met à jour les détails si la question dont l'id est uuid existe | Supprime la question dont l'id est uuid |
-  | **/health**    | X                     | Récupère le rapport des healthchecks | X | X |
-  
+| Ressource              | POST                       | GET                                                    | PUT                                                                     | DELETE                                  |
+| ---------------------- | -------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- | --------------------------------------- |
+| **/questions**         | Créé une nouvelle question | Récupère les détails de plusieurs questions            | X                                                                       |     X                                   |
+| **/questions/uuid**    | X                          | Récupère les détails de la question dont l'id est uuid | Met à jour les détails si la question dont l'id est uuid si elle existe | Supprime la question dont l'id est uuid |
+| **/health**            | X                          | Récupère le rapport des healthchecks                   | X                                                                       | X                                       |
+
 Premier exemple, dans l'image ci-dessous, une requête **POST** sur les questions. On y voit le verbe **HTTP**, l'URL de la requête ainsi que le corps de la requête avec des valeurs valides pour pouvoir créer une question.
   
 ![Requête Post sur l'endpoint questions](assets/Azure_Post_Question.jpg)  
