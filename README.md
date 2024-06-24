@@ -53,8 +53,6 @@ L'objectif de ce projet est de mettre en pratique la majorité des connaissances
   
 C'est également une occasion de m'occuper pour la première fois d'un projet seul sur tous les points, de la conception jusqu'au déploiement et la mise en œuvre.  
   
-J'ai ainsi pu élaborer une idée de site web à réaliser et à faire un état de l'art sur les bonnes pratiques de développement moderne dans ma stack technique.  
-  
 J'ai ensuite pu comparer et choisir les technologies et méthodologies qui me paraissaient les plus pertinentes sur lesquelles me former ou approfondir ma maîtrise. La plupart de ces choix sont justifiés et expliqués par la suite, en omettant volontairement des éléments qui n'apparaissent pas dans ce projet, car inapdapté à celui-ci.  
   
 # État du projet  
@@ -68,6 +66,7 @@ L'état actuel peut être considéré comme un produit satisfaisant pour une pre
 * Cross Origine Ressource Sharing (CORS)  
 * Mise en cache des données avec **Redis**  
 * Résilience avec **Polly**  
+* Localisation
   
 D'autres éléments devront être intégrés avec l'ajout de nouvelles fonctionnalités :  
   
@@ -86,7 +85,7 @@ Pour commencer, suivez ses étapes :
 ```  
 > docker compose build && docker compose up  
 ```  
-5. Lorsque les conteneurs sont démarrés avec succès, naviguer sur http://localhost:5215/swagger/accueil.html  
+5. Lorsque les conteneurs sont démarrés avec succès, naviguer sur http://localhost:5215/swagger/index.html  
   
 # Comment lancer le projet en local sans Docker ?  
   
@@ -102,23 +101,27 @@ Ensuite, il faut :
 ```  
 > dotnet run --project ./src/QuizyZunaAPI.Api  
 ```  
-4. Naviguer sur http://localhost:5215/swagger/accueil.html  
+4. Naviguer sur http://localhost:5215/swagger/index.html  
   
 # Comment essayer l'API sur Azure ?  
   
-Pour illustrer les exemples de ce chapitre, je vais me servir de **Postman** mais ce n'est pas un prérequis. N'importe quel outil qui permet d'envoyer des requêtes **HTTP** peut remplacer **Postman**.  
+Pour illustrer les exemples de ce chapitre, je vais me servir de **Postman** mais ce n'est pas un prérequis. N'importe quel outil qui permet d'envoyer des requêtes **HTTP** peut remplacer **Postman**.  Voici un tableau récapitulatif des différents points d'entrée de l'API :
+
+| Resource           | POST                  | GET                            | PUT | DELETE           |
+| ------------------ | --------------------- | ------------------------------ | ---------------------------------------- | --- | ---------------- |
+| **/questions**      | Créé une nouvelle question | Récupère les détails de plusieurs questions         | X   |     X            |
+| **/questions/uuid**    | X                     | Récupère les détails de la question dont l'id est uuid | Met à jour les détails si la question dont l'id est uuid existe | Supprime la question dont l'id est uuid |
+  | **/health**    | X                     | Récupère le rapport des healthchecks | X | X |
   
-Le premier endpoint accessible concerne les Questions. Pour commencer à tester les différentes opérations, il faut tout d'abord commencer par créer une question à l'aide d'une requête **POST** comme sur l'image suivante. On y voit le verbe **HTTP**, l'URL de la requête ainsi que le corps de la requête avec des valeurs valides pour pouvoir créer une question.  
+Premier exemple, dans l'image ci-dessous, une requête **POST** sur les questions. On y voit le verbe **HTTP**, l'URL de la requête ainsi que le corps de la requête avec des valeurs valides pour pouvoir créer une question.
   
 ![Requête Post sur l'endpoint questions](assets/Azure_Post_Question.jpg)  
-Dans la deuxième moitié de l'image, on peut voir le corps de la réponse de l'API qui contient la question créée et on peut y retrouver l'id qui lui est associé pour pouvoir le manipuler avec les autres opérations. Sont disponibles : **GET**, **DELETE** qui ne nécessitent pas de corps de requête ainsi que **PUT** qui nécessite le même corps de requête que le **POST**. Pour effectuer ces opérations, il faut utiliser le verbe **HTTP** approprié et ajouter l'id de la question manipulée à la fin de l'URL de la requête comme ceci :  
-```  
-https://quizyzuna-api.azurewebsites.net/api/v1/questions/<id>  
-```  
+
+Dans la deuxième moitié de l'image, on peut voir le corps de la réponse de l'API qui contient la question créée et on peut y retrouver l'id qui lui est associé pour pouvoir le manipuler avec les autres opérations.
   
-Enfin, il existe un deuxième endpoint qui concerne les **Healthchecks** pour lequel le seul verbe **HTTP** autorisé est **GET** qui permet de savoir si la connexion à la base de données cloud fonctionne comme on peut observer sur l'image suivante :  
+Deuxième et dernier exemple, dans l'image ci-dessous, une requête  **GET** sur l'endpoint health qui permet de savoir si la connexion à la base de données cloud fonctionne comme on peut observer sur l'image suivante :  
   
-![Requête Get sur l'endpoint health](assets/Azure_Get_Health.jpg)  
+![Requête Get sur l'endpoint health](assets/Azure_Get_Health.jpg)
 Enfin, il est important de préciser que s'agissant d'une version gratuite des services **Azure** parfois les requêtes ne fonctionnent pas toujours. Il faut occasionnellement attendre un peu et réessayer si la réponse est un timeout.  
 
 # Continuous Integration / Continuous Deployment  
@@ -253,6 +256,8 @@ Pour le moment, le seul projet contenu dans l'infrastructure concerne la persist
 Ayant déjà travaillé avec des bases de données **SQL** et **NoSQL**, j'ai préféré renforcer mes compétences en bases de données relationnelles **SQL**. À partir de là, j'ai choisi **PostgreSQL** comme base de données pour m'améliorer, étant open-source, populaire et très performante.  
   
 **Entity Framework Core** est l'un des deux **Object Relational Mapper** les plus populaires avec Dapper dans l'environnement **.NET**. C'est un **ORM** extrêmement complet qui permet de mettre en place rapidement un lien entre notre modèle de données et une base de données.  
+
+Dans ce projet, j'ai fonctionné avec une stratégie **Code First**. J'ai donc commencé par définir mon domaine et afin de faire le lien avec la base de données je me suis servi de la configuration avec le **Fluent API d'EFCore**.
   
 ## Presentation  
   
@@ -263,7 +268,9 @@ Au cours de mes recherches, j'ai rencontré à plusieurs reprises le concept de 
 Afin de proposer une bonne découvrabilité de l'API, j'ai suivi les standards **OpenAPI** à l'aide de la bibliothèque **Swashbuckle**. De plus, dans le but de respecter les bonnes pratiques **REST**, il faut mettre en place un système de **versioning** de l'API. Pour le mettre en place, je me suis servi de la bibliothèque **Asp.Versioning**.  
   
 Autre découverte totale, le système d'**Health Checks** qui sont des appels les plus simples possibles aux systèmes d'infrastructure pour pouvoir remonter un problème, s'il y a, de la liaison avec ce système. On fait en sorte d'avoir des points d'entrées sur l'API qui permettent de faire ces appels. On peut également faire en sorte d'automatiquement appeler ces méthodes pour pouvoir détecter un problème en amont.  
-  
+
+Enfin, j'ai commencé à mettre en place un système de **RateLimiter** très basique pour la sécurité. Cela permet de limiter le nombre d'appels à l'API venant d'un même client.
+
 # Tests  
   
 Pour développer les tests, j'ai décidé d'utiliser le framework **XUnit** et de le coupler aux librairies **NSubstitute** et **FluentAssertions** pour simuler des comportements de méthodes et écrire les assertions comme des phrases respectivement.  
