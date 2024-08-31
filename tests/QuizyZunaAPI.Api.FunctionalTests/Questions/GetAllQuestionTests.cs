@@ -12,7 +12,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     {
         //Arrange
         CreateQuestionRequest createRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
-                "Novice", "Antiquity", ["Literature", "Mangas"]);
+                "Novice", "", ["Literature", "Mangas"]);
         await HttpClient.PostAsJsonAsync(BaseApiUrl, createRequest);
 
         //Act
@@ -27,19 +27,6 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     {
         //Arrange
         var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?difficulties=???");
-
-        //Act
-        var response = await HttpClient.GetAsync(requestPath);
-
-        //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task ShouldReturn_400BadRequest_WhenErasIsInvalid()
-    {
-        //Arrange
-        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?eras=???");
 
         //Act
         var response = await HttpClient.GetAsync(requestPath);
@@ -65,7 +52,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenNumberOfQuestionsGreaterThan40()
     {
         //Arrange
-        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?numberOfQuestions=41");
+        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?amount=41");
 
         //Act
         var response = await HttpClient.GetAsync(requestPath);
@@ -78,7 +65,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenNumberOfQuestionsLowerThan1()
     {
         //Arrange
-        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?numberOfQuestions=0");
+        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?amount=0");
 
         //Act
         var response = await HttpClient.GetAsync(requestPath);
@@ -92,19 +79,6 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     {
         //Arrange
         var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?difficulties=");
-
-        //Act
-        var response = await HttpClient.GetAsync(requestPath);
-
-        //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
-    public async Task ShouldReturn_400BadRequest_WhenErasIsEmpty()
-    {
-        //Arrange
-        var requestPath = new Uri(BaseApiUrl.OriginalString[..^1] + "?eras=");
 
         //Act
         var response = await HttpClient.GetAsync(requestPath);

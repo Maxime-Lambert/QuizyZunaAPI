@@ -41,21 +41,22 @@ public class DeleteQuestionCommandTests
     public async Task Handle_ShouldCallOnce_Delete_AndSaveChanges_WhenQuestionExists()
     {
         //Arrange
-        var id = new QuestionId(Guid.NewGuid());
-        var title = new QuestionTitle("Is this a question ?");
-        var correctAnswer = new CorrectAnswer("Yes");
+        QuestionId id = new(Guid.NewGuid());
+        QuestionTitle title = new("Is this a question ?");
+        CorrectAnswer correctAnswer = new("Yes");
         ICollection<WrongAnswer> wrongAnswersList =
             [WrongAnswer.Create(id, "No"),
                 WrongAnswer.Create(id, "Maybe"),
                 WrongAnswer.Create(id, "Impossible")];
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(id, Topic.Literature)];
-        var themes = new Themes(themesList);
+        Themes themes = new(themesList);
         var difficulty = Difficulty.Beginner;
-        var era = Era.None;
-        var questionTags = new QuestionTags(themes, difficulty, era);
-        var question = Question.Create(id, title, answers, questionTags);
+        QuestionYear year = new("");
+        var questionTags = new QuestionTags(themes, difficulty, year);
+        QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
+        var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
         _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == id), Arg.Any<CancellationToken>())
             .Returns(question);

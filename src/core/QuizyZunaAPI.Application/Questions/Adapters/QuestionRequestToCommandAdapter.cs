@@ -15,55 +15,53 @@ public static class QuestionRequestToCommandAdapter
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var questionId = new QuestionId(Guid.NewGuid());
-        var title = new QuestionTitle(request.title);
-        var correctAnswer = new CorrectAnswer(request.correctAnswer);
+        QuestionId questionId = new(Guid.NewGuid());
+        QuestionTitle title = new(request.title);
+        CorrectAnswer correctAnswer = new(request.correctAnswer);
         Collection<WrongAnswer> wrongAnswersList = [];
         foreach (var wrongAnswer in request.wrongAnswers)
         {
             wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer));
         }
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
         Collection<Theme> themesList = [];
         foreach (var theme in request.themes)
         {
             themesList.Add(Theme.Create(questionId, Enum.Parse<Topic>(theme)));
         }
-        var themes = new Themes(themesList);
-        var era = string.IsNullOrEmpty(request.era) ? Era.None : Enum.Parse<Era>(request.era);
-        var tags = new QuestionTags(themes, Enum.Parse<Difficulty>(request.difficulty), era);
+        Themes themes = new(themesList);
+        QuestionYear year = new(request.year);
+        QuestionLastModifiedAt questionLastModifiedAt = new(DateTime.UtcNow);
+        QuestionTags tags = new(themes, Enum.Parse<Difficulty>(request.difficulty), year);
 
-        return new CreateQuestionCommand(Question.Create(questionId, title, answers, tags));
+        return new CreateQuestionCommand(Question.Create(questionId, title, answers, tags, questionLastModifiedAt));
     }
 
     public static PutQuestionCommand ToCommand(this PutQuestionRequest request, Guid id)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var questionId = new QuestionId(id);
-        var title = new QuestionTitle(request.title);
-        var correctAnswer = new CorrectAnswer(request.correctAnswer);
+        QuestionId questionId = new(id);
+        QuestionTitle title = new(request.title);
+        CorrectAnswer correctAnswer = new(request.correctAnswer);
         Collection<WrongAnswer> wrongAnswersList = [];
         foreach (var wrongAnswer in request.wrongAnswers)
         {
             wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer));
         }
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
         Collection<Theme> themesList = [];
         foreach (var theme in request.themes)
         {
             themesList.Add(Theme.Create(questionId, Enum.Parse<Topic>(theme)));
         }
-        var themes = new Themes(themesList);
-        var era = Era.None;
-        if (!string.IsNullOrEmpty(request.era))
-        {
-            era = Enum.Parse<Era>(request.era);
-        }
-        var tags = new QuestionTags(themes, Enum.Parse<Difficulty>(request.difficulty), era);
+        Themes themes = new(themesList);
+        QuestionYear year = new(request.year);
+        QuestionLastModifiedAt questionLastModifiedAt = new(DateTime.UtcNow);
+        QuestionTags tags = new(themes, Enum.Parse<Difficulty>(request.difficulty), year);
 
-        return new PutQuestionCommand(Question.Create(questionId, title, answers, tags));
+        return new PutQuestionCommand(Question.Create(questionId, title, answers, tags, questionLastModifiedAt));
     }
 }

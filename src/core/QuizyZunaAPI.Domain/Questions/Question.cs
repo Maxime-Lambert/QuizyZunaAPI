@@ -12,20 +12,24 @@ public sealed class Question
 
     public QuestionTags Tags { get; set; } = null!;
 
+    public QuestionLastModifiedAt LastModifiedAt { get; set; } = null!;
+
     private Question() { }
 
-    public static Question Create(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags)
+    public static Question Create(QuestionId id, QuestionTitle title, Answers answers, QuestionTags tags, QuestionLastModifiedAt lastModifiedAt)
     {
         ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(answers);
         ArgumentNullException.ThrowIfNull(tags);
+        ArgumentNullException.ThrowIfNull(lastModifiedAt);
 
         return new Question {
             Id = id,
             Title = title,
             Answers = answers,
-            Tags = tags
+            Tags = tags,
+            LastModifiedAt = lastModifiedAt
         };
     }
 }

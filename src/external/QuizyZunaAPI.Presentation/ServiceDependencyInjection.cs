@@ -24,19 +24,18 @@ public static class ServiceDependencyInjection
                     partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 10,
+                        PermitLimit = 100,
                         Window = TimeSpan.FromSeconds(10)
                     }));
         });
 
         services.AddProblemDetails();
 
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-
         services.AddApiVersioning(options =>
         {
             options.DefaultApiVersion = new ApiVersion(1);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
         }).AddApiExplorer(options =>
         {
@@ -46,6 +45,10 @@ public static class ServiceDependencyInjection
 
         services.AddHealthChecks()
             .AddNpgSql(builder?.Configuration.GetConnectionString("Database")!);
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
 
         services.AddExceptionHandler<QuestionNotFoundApplicationExceptionHandler>();
         services.AddExceptionHandler<QuestionsNotFoundWithFilersApplicationExceptionHandler>();

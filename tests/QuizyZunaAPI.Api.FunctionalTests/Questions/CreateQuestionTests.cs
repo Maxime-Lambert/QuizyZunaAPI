@@ -8,8 +8,8 @@ namespace QuizyZunaAPI.Api.FunctionalTests.Questions;
 
 public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFactory) : BaseFunctionalTest(functionalTestWebAppFactory)
 {
-    private static readonly CreateQuestionRequest CreateQuestionRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
-            "Novice", "Antiquity", ["Literature", "Mangas"]);
+    private static readonly CreateQuestionRequest _createQuestionRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
+            "Novice", "", ["Literature", "Mangas"]);
 
     [Fact]
     public async Task ShouldReturn_201CreatedAt_WhenRequestIsCorrect()
@@ -17,7 +17,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         //Arrange
 
         //Act
-        var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, CreateQuestionRequest);
+        var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, _createQuestionRequest);
         var content = await response.Content.ReadFromJsonAsync<QuestionResponse>();
 
         //Assert
@@ -29,7 +29,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenTitleIsEmpty()
     {
         //Arrange
-        var request = CreateQuestionRequest with { title = "" };
+        var request = _createQuestionRequest with { title = "" };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
@@ -42,7 +42,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenCorrectAnswerIsEmpty()
     {
         //Arrange
-        var request = CreateQuestionRequest with { correctAnswer = "" };
+        var request = _createQuestionRequest with { correctAnswer = "" };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
@@ -55,7 +55,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenDifficultyIsEmpty()
     {
         //Arrange
-        var request = CreateQuestionRequest with { difficulty = "" };
+        var request = _createQuestionRequest with { difficulty = "" };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
@@ -68,7 +68,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenThemesIsEmpty()
     {
         //Arrange
-        var request = CreateQuestionRequest with { themes = [] };
+        var request = _createQuestionRequest with { themes = [] };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
@@ -81,7 +81,7 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenWrongAnswersIsEmpty()
     {
         //Arrange
-        var request = CreateQuestionRequest with { wrongAnswers = [] };
+        var request = _createQuestionRequest with { wrongAnswers = [] };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
@@ -94,7 +94,20 @@ public class CreateQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
     public async Task ShouldReturn_400BadRequest_WhenWrongAnswersContainsCorrectAnswer()
     {
         //Arrange
-        var request = CreateQuestionRequest with { wrongAnswers = ["Answer1"], correctAnswer = "Answer1" };
+        var request = _createQuestionRequest with { wrongAnswers = ["Answer1"], correctAnswer = "Answer1" };
+
+        //Act
+        var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ShouldReturn_400BadRequest_WhenYearHasWrongFormat()
+    {
+        //Arrange
+        var request = _createQuestionRequest with { year = "2024" };
 
         //Act
         var response = await HttpClient.PostAsJsonAsync(BaseApiUrl, request);

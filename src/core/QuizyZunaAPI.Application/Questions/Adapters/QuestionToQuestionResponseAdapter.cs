@@ -1,5 +1,6 @@
 ﻿using QuizyZunaAPI.Application.Questions.Responses;
 using QuizyZunaAPI.Domain.Questions;
+using QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 namespace QuizyZunaAPI.Application.Questions.Adapters;
 
@@ -13,8 +14,9 @@ internal static class QuestionToQuestionResponseAdapter
             question.Answers.CorrectAnswer.Value,
             question.Answers.WrongAnswers.Value.Select(wrongAnswer => wrongAnswer.Value),
             Enum.GetName(question.Tags.Difficulty),
-            Enum.GetName(question.Tags.Era),
-            question.Tags.Themes.Value.Select(theme => Enum.GetName(theme.Value)));
+            question.Tags.Year.Value,
+            question.Tags.Themes.Value.Select(theme => Enum.GetName(theme.Value)),
+            question.LastModifiedAt.Value);
     }
 
     internal static QuestionWithoutIdResponse ToResponseWithoutId(this Question question)
@@ -24,7 +26,8 @@ internal static class QuestionToQuestionResponseAdapter
             question.Answers.CorrectAnswer.Value,
             question.Answers.WrongAnswers.Value.Select(wrongAnswer => wrongAnswer.Value),
             Enum.GetName(question.Tags.Difficulty),
-            Enum.GetName(question.Tags.Era),
-            question.Tags.Themes.Value.Select(theme => Enum.GetName(theme.Value)));
+            question.Tags.Year.Value,
+            question.Tags.Themes.Value.Select(theme => Enum.GetName(theme.Value)),
+            question.LastModifiedAt.Value);
     }
 }

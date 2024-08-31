@@ -67,12 +67,14 @@ L'état actuel peut être considéré comme un produit satisfaisant pour une pre
 * Mise en cache des données avec **Redis**  
 * Résilience avec **Polly**  
 * Localisation
+* Surveillance des métriques
   
 D'autres éléments devront être intégrés avec l'ajout de nouvelles fonctionnalités :  
   
 * Traitement d'informations en temps-réel avec **SignalR**  
 * Création de quiz personnalisés  
 * Import de fichiers
+* Option dans le getAll des questions pour équilibrer au mieux les thèmes des questions retournées
 
 # Comment lancer le projet en local avec Docker ?  
   
@@ -107,11 +109,13 @@ Ensuite, il faut :
   
 Pour illustrer les exemples de ce chapitre, je vais me servir de **Postman** mais ce n'est pas un prérequis. N'importe quel outil qui permet d'envoyer des requêtes **HTTP** peut remplacer **Postman**.  Voici un tableau récapitulatif des différents points d'entrée de l'API :
 
-| Ressource              | POST                       | GET                                                    | PUT                                                                     | DELETE                                  |
-| ---------------------- | -------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- | --------------------------------------- |
-| **/questions**         | Créé une nouvelle question | Récupère les détails de plusieurs questions            | X                                                                       |     X                                   |
-| **/questions/uuid**    | X                          | Récupère les détails de la question dont l'id est uuid | Met à jour les détails si la question dont l'id est uuid si elle existe | Supprime la question dont l'id est uuid |
-| **/health**            | X                          | Récupère le rapport des healthchecks                   | X                                                                       | X                                       |
+| Ressource                   | POST                       | GET                                                                                                                                                        | PUT                                                                     | DELETE                                  |
+| --------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------- |
+| **/questions**              | Créé une nouvelle question | Récupère les détails des questions. Paramètres : amount(int?), difficulties(string?), themes(string?), orderByAscendentDifficulty(bool?), randomize(bool?) | X                                                                       |     X                                   |
+| **/questions/uuid**         | X                          | Récupère les détails de la question dont l'id est uuid                                                                                                     | Met à jour les détails si la question dont l'id est uuid si elle existe | Supprime la question dont l'id est uuid |
+| **/health**                 | X                          | Récupère le rapport des healthchecks                                                                                                                       | X                                                                       | X                                       |
+| **/questions_difficulties** | X                          | Récupère les difficultés possibles                                                                                                                         | X                                                                       | X                                       |
+| **/questions_topics**       | X                          | Récupère les thèmes possibles                                                                                                                              | X                                                                       | X                                       |
 
 Premier exemple, dans l'image ci-dessous, une requête **POST** sur les questions. On y voit le verbe **HTTP**, l'URL de la requête ainsi que le corps de la requête avec des valeurs valides pour pouvoir créer une question.
   
@@ -122,6 +126,9 @@ Dans la deuxième moitié de l'image, on peut voir le corps de la réponse de l'
 Deuxième et dernier exemple, dans l'image ci-dessous, une requête  **GET** sur l'endpoint health qui permet de savoir si la connexion à la base de données cloud fonctionne comme on peut observer sur l'image suivante :  
   
 ![Requête Get sur l'endpoint health](assets/Azure_Get_Health.jpg)
+
+Il est également possible d'accéder à l'interface Swagger sur Azure à l'adresse https://quizyzuna-api.azurewebsites.net/swagger/index.html
+
 Enfin, il est important de préciser que s'agissant d'une version gratuite des services **Azure** parfois les requêtes ne fonctionnent pas toujours. Il faut occasionnellement attendre un peu et réessayer si la réponse est un timeout.  
 
 # Continuous Integration / Continuous Deployment  
@@ -164,7 +171,7 @@ Les principes **SOLID** sont les premiers concepts à maîtriser pour améliorer
 * **O**pen-Closed Principle → Le code doit être ouvert aux extensions, mais fermé aux modifications.  
 * **L**iskov Substitution Principle → Si une propriété est vraie pour une superclasse, alors elle doit être automatiquement vraie pour une de ses sous-classes.  
 * **I**nterface Segregation Principle → Si une classe implémente une interface, ainsi, elle doit se servir de toutes les méthodes de l'interface. Si ce n'est pas le cas, on crée des interfaces plus spécifiques pour chaque cas d'utilisation.  
-* **D**epedency Injection Principle → Les entités les plus importantes ne doivent pas dépendre de détails d'implémentation des différents services dont il a besoin.  
+* **D**ependency Injection Principle → Les entités les plus importantes ne doivent pas dépendre de détails d'implémentation des différents services dont il a besoin.  
   
 ## Object Calisthenics  
   
@@ -210,7 +217,7 @@ La couche **Domain** a été réalisée avec la méthodologie du **Domain Driven
   
 ### Modélisation
 
-La modélisation d'un domaine dispose de règles précises. On y distingue trois types d'objets : Les **AggregateRoots**, les **Entities** et les **Value Objects**.
+La modélisation d'un domaine dispose de règles précises. On y distingue trois types d'objets : Les **Value Objects**, les **Entities** et les **AggregateRoots**.
 
 * Les **Value Objects** représentent des concepts métiers qui ont leurs propres règles, méthodes et validations mais n'ont pas d'identité qui leur est propre.
 * Les **Entities** représentent des objets qui possèdent une identité qui leur est propre. Lorsque l'on souhaite comparer deux **Value Objects** du même type, on compare donc l'égalité entre tous leurs champs. Tandis que lorsque l'on souhaite comparer deux **Entities** de même type, on compare alors l'égalité seulement à propos des champs qui représentent leur identité.
@@ -277,7 +284,7 @@ Pour développer les tests, j'ai décidé d'utiliser le framework **XUnit** et d
   
 ## Unitaires  
   
-Les tests unitaires sont la pierre angulaire des tests en permettant de valider le fonctionnement de chaque composant individuellement.  
+Les tests unitaires sont la pierre angulaire des tests. Ils permettent de valider le fonctionnement de chaque composant individuellement.  
   
 J'ai divisé en 2 projets pour les tests unitaires pour découper les tests des 2 couches abordées :  
 * **Domain** : Pour tester la création des objets et les méthodes  

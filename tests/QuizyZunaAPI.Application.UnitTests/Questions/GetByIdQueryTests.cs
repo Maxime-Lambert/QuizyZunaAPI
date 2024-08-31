@@ -27,21 +27,22 @@ public class GetByIdQueryTests
     public async Task Handle_ShouldCallOnce_GetByIdAsync_WhenQueryIsValid()
     {
         //Arrange
-        var questionId = new QuestionId(Guid.NewGuid());
-        var title = new QuestionTitle("Is this a question ?");
-        var correctAnswer = new CorrectAnswer("Yes");
+        QuestionId id = new(Guid.NewGuid());
+        QuestionTitle title = new("Is this a question ?");
+        CorrectAnswer correctAnswer = new("Yes");
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(questionId, "No"),
-                WrongAnswer.Create(questionId, "Maybe"),
-                WrongAnswer.Create(questionId, "Impossible")];
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
-        ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
-        var themes = new Themes(themesList);
+            [WrongAnswer.Create(id, "No"),
+                WrongAnswer.Create(id, "Maybe"),
+                WrongAnswer.Create(id, "Impossible")];
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
+        ICollection<Theme> themesList = [Theme.Create(id, Topic.Literature)];
+        Themes themes = new(themesList);
         var difficulty = Difficulty.Beginner;
-        var era = Era.None;
-        var questionTags = new QuestionTags(themes, difficulty, era);
-        var question = Question.Create(questionId, title, answers, questionTags);
+        QuestionYear year = new("");
+        var questionTags = new QuestionTags(themes, difficulty, year);
+        QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
+        var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
         _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId.Value == GetQuestionByIdQuery.questionid), Arg.Any<CancellationToken>())
             .Returns(question);

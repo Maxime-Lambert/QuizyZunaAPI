@@ -22,10 +22,10 @@ public static class QuestionsEndpoints
     {
         var questionEndpoints = app.MapGroup(QuestionsEndpointRouteValue);
 
-        questionEndpoints.MapGet("", async (int? numberOfQuestions, string? difficulties, string? eras, string? themes,
-            IValidator<GetAllQuestionsQuery> validator, ISender sender) =>
+        questionEndpoints.MapGet("", async (int? amount, string? difficulties, string? themes,
+            bool? orderByAscendantDifficulty, bool? randomize, IValidator <GetAllQuestionsQuery> validator, ISender sender) =>
         {
-            var request = new GetAllQuestionsQuery(numberOfQuestions, difficulties, eras, themes);
+            var request = new GetAllQuestionsQuery(amount, difficulties, themes, orderByAscendantDifficulty, randomize);
 
             var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 

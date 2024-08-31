@@ -4,5 +4,5 @@ using QuizyZunaAPI.Application.Questions.Responses;
 
 namespace QuizyZunaAPI.Application.Questions.GetRange;
 
-public sealed record GetAllQuestionsQuery(int? numberOfQuestions, string? difficulties, string? eras, string? themes) 
+public sealed record GetAllQuestionsQuery(int? amount, string? difficulties, string? themes, bool? orderByAscendantDifficulty, bool? randomize) 
     : IRequest<IEnumerable<QuestionWithoutIdResponse>>;

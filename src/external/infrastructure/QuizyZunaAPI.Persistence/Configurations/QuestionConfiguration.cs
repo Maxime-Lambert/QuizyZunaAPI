@@ -22,6 +22,10 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
             title => title!.Value,
             value => new QuestionTitle(value));
 
+        builder.Property(question => question.LastModifiedAt).HasConversion(
+            lastModifiedAt => lastModifiedAt!.Value,
+            value => new QuestionLastModifiedAt(value));
+
         builder.OwnsOne(question => question.Answers, answersBuilder =>
         {
             answersBuilder.OwnsOne(answers => answers.WrongAnswers, wrongAnswersBuilder =>
@@ -46,7 +50,9 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
 
             tagsBuilder.Property(tags => tags.Difficulty);
 
-            tagsBuilder.Property(tags => tags.Era);
+            tagsBuilder.Property(tags => tags.Year).HasConversion(
+                            year => year!.Value,
+                            value => new QuestionYear(value));
         });
     }
 }

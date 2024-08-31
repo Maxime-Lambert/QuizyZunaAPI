@@ -16,7 +16,6 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasPostgresEnum<Difficulty>();
-        modelBuilder.HasPostgresEnum<Era>();
         modelBuilder.HasPostgresEnum<Topic>();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }

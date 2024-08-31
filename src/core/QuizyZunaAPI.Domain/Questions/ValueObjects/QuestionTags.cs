@@ -8,16 +8,17 @@ public sealed record QuestionTags
 
     public Difficulty Difficulty { get; private init; }
 
-    public Era Era { get; private init; }
+    public QuestionYear Year { get; private init; } = null!;
 
     private QuestionTags() { }
 
-    public QuestionTags(Themes themes, Difficulty difficulty, Era era)
+    public QuestionTags(Themes themes, Difficulty difficulty, QuestionYear year)
     {
         ArgumentNullException.ThrowIfNull(nameof(themes));
+        ArgumentNullException.ThrowIfNull(nameof(year));
 
         Themes = themes;
         Difficulty = difficulty;
-        Era = era;
+        Year = year;
     }
 }

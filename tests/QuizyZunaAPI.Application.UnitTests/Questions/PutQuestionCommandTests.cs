@@ -14,7 +14,7 @@ namespace QuizyZunaAPI.Application.UnitTests.Questions;
 public class PutQuestionCommandTests
 {
     private static readonly PutQuestionRequest PutQuestionRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
-            "Novice", "Antiquity", ["Literature", "Mangas"]);
+            "Novice", "", ["Literature", "Mangas"]);
 
     private readonly PutQuestionCommandHandler _handler;
     private readonly IUnitOfWork _unitOfWorkMock;
@@ -31,21 +31,22 @@ public class PutQuestionCommandTests
     public async Task Handle_ShouldCallOnce_GetByIdAsync_WhenCommandIsValid()
     {
         //Arrange
-        var questionId = new QuestionId(Guid.NewGuid());
-        var title = new QuestionTitle("Is this a question ?");
-        var correctAnswer = new CorrectAnswer("Yes");
+        QuestionId id = new(Guid.NewGuid());
+        QuestionTitle title = new("Is this a question ?");
+        CorrectAnswer correctAnswer = new("Yes");
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(questionId, "No"),
-                WrongAnswer.Create(questionId, "Maybe"),
-                WrongAnswer.Create(questionId, "Impossible")];
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
-        ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
-        var themes = new Themes(themesList);
+            [WrongAnswer.Create(id, "No"),
+                WrongAnswer.Create(id, "Maybe"),
+                WrongAnswer.Create(id, "Impossible")];
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
+        ICollection<Theme> themesList = [Theme.Create(id, Topic.Literature)];
+        Themes themes = new(themesList);
         var difficulty = Difficulty.Beginner;
-        var era = Era.None;
-        var questionTags = new QuestionTags(themes, difficulty, era);
-        var question = Question.Create(questionId, title, answers, questionTags);
+        QuestionYear year = new("");
+        var questionTags = new QuestionTags(themes, difficulty, year);
+        QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
+        var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
         var command = PutQuestionRequest.ToCommand(Guid.NewGuid());
         _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())
@@ -80,21 +81,22 @@ public class PutQuestionCommandTests
     public async Task Handle_ShouldCallOnce_Update_AndSaveChanges_WhenIdExists()
     {
         //Arrange
-        var questionId = new QuestionId(Guid.NewGuid());
-        var title = new QuestionTitle("Is this a question ?");
-        var correctAnswer = new CorrectAnswer("Yes");
+        QuestionId questionId = new(Guid.NewGuid());
+        QuestionTitle title = new("Is this a question ?");
+        CorrectAnswer correctAnswer = new("Yes");
         ICollection<WrongAnswer> wrongAnswersList =
             [WrongAnswer.Create(questionId, "No"),
                 WrongAnswer.Create(questionId, "Maybe"),
                 WrongAnswer.Create(questionId, "Impossible")];
-        var wrongAnswers = new WrongAnswers(wrongAnswersList);
-        var answers = new Answers(correctAnswer, wrongAnswers);
+        WrongAnswers wrongAnswers = new(wrongAnswersList);
+        Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
-        var themes = new Themes(themesList);
+        Themes themes = new(themesList);
         var difficulty = Difficulty.Beginner;
-        var era = Era.None;
-        var questionTags = new QuestionTags(themes, difficulty, era);
-        var question = Question.Create(questionId, title, answers, questionTags);
+        QuestionYear year = new("");
+        var questionTags = new QuestionTags(themes, difficulty, year);
+        QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
+        var question = Question.Create(questionId, title, answers, questionTags, lastModifiedAt);
 
         var command = PutQuestionRequest.ToCommand(questionId.Value);
         _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())

@@ -21,6 +21,16 @@ builder.Services.AddPersistence()
                 .AddApplication()
                 .AddPresentation(builder);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("QuizyZuna React App", builder =>
+    {
+        builder.WithOrigins("*")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build(); 
 
 if (!app.Environment.IsProduction())
@@ -28,22 +38,22 @@ if (!app.Environment.IsProduction())
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        db.Database.Migrate(); 
+        await db.Database.MigrateAsync().ConfigureAwait(false);
     }
-
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
-
-        foreach (var groupName in descriptions.Select(description => description.GroupName))
-        {
-            string url = $"/swagger/{groupName}/swagger.json";
-            string name = groupName.ToUpperInvariant();
-            options.SwaggerEndpoint(url, name);
-        }
-    });
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+
+    foreach (var groupName in descriptions.Select(description => description.GroupName))
+    {
+        string url = $"/swagger/{groupName}/swagger.json";
+        string name = groupName.ToUpperInvariant();
+        options.SwaggerEndpoint(url, name);
+    }
+});
 
 app.UseHttpsRedirection();
 
@@ -52,6 +62,8 @@ app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
 
 app.UseRateLimiter();
+
+app.UseCors("QuizyZuna React App");
 
 var apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
@@ -62,12 +74,14 @@ RouteGroupBuilder versionedGroup = app.MapGroup("api/v{apiVersion:apiVersion}")
     .WithApiVersionSet(apiVersionSet);
 
 versionedGroup.MapQuestionEndpoints();
+versionedGroup.MapTopicsEndpoints();
+versionedGroup.MapDifficultiesEndpoints();
 versionedGroup.MapHealthChecks("health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
-app.Run();
+await app.RunAsync().ConfigureAwait(false);
 
 public partial class Program 
 {

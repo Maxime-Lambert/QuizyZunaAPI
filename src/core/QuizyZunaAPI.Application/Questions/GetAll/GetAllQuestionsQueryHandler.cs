@@ -22,9 +22,9 @@ public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepo
 
         var numberOfQuestions = DEFAULT_NUMBER_OF_QUESTIONS_PER_QUERY;
 
-        if(request.numberOfQuestions is not null)
+        if(request.amount is not null)
         {
-            numberOfQuestions = request.numberOfQuestions.Value;
+            numberOfQuestions = request.amount.Value;
         }
 
         IEnumerable<Difficulty> difficulties = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>();
@@ -33,27 +33,31 @@ public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepo
             difficulties = request.difficulties.Split(',').Select(difficulty => (Difficulty)Enum.Parse(typeof(Difficulty), difficulty));
         }
 
-        IEnumerable<Era> eras = Enum.GetValues(typeof(Era)).Cast<Era>();
-        if (!string.IsNullOrEmpty(request.eras))
-        {
-            eras = request.eras.Split(',').Select(era => (Era)Enum.Parse(typeof(Era), era));
-        }
-
         IEnumerable<Topic> themes = Enum.GetValues(typeof(Topic)).Cast<Topic>();
         if (!string.IsNullOrEmpty(request.themes))
         {
             themes = request.themes.Split(',').Select(theme => (Topic)Enum.Parse(typeof(Topic), theme));
         }
 
-        var filteredQuestions = questions?.Where(question => 
+        var filteredQuestions = questions?.Where(question =>
                                     difficulties.Contains(question.Tags.Difficulty) &&
-                                    eras.Contains(question.Tags.Era) &&
-                                    themes.Intersect(question.Tags.Themes.Value.Select(theme => theme.Value)).Any())
-                                        .Take(numberOfQuestions);
+                                    themes.Intersect(question.Tags.Themes.Value.Select(theme => theme.Value)).Any());
 
         if(filteredQuestions is null || !filteredQuestions.Any())
         {
             throw new QuestionsNotFoundWithFiltersApplicationException("No questions can be found with these filters");
+        }
+
+        if (request.randomize.HasValue && request.randomize.Value)
+        {
+            filteredQuestions = filteredQuestions.OrderBy(_ => Guid.NewGuid());
+        }
+
+        filteredQuestions = filteredQuestions.Take(numberOfQuestions);
+
+        if (request.orderByAscendantDifficulty.HasValue && request.orderByAscendantDifficulty.Value)
+        {
+            filteredQuestions = filteredQuestions.OrderBy(question => (int)question.Tags.Difficulty);
         }
 
         return filteredQuestions.Select(question => question.ToResponseWithoutId());

@@ -8,7 +8,7 @@ namespace QuizyZunaAPI.Application.UnitTests.Questions;
 public class CreateQuestionCommandTests
 {
     private static readonly CreateQuestionRequest CreateQuestionRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
-            "Novice", "Antiquity", ["Literature", "Mangas"]);
+            "Novice", "", ["Literature", "Mangas"]);
 
     private readonly CreateQuestionCommandHandler _handler;
     private readonly IUnitOfWork _unitOfWorkMock;

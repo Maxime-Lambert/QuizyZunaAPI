@@ -1,9 +1,7 @@
-version: '3.4'
-
 services:
   quizyzuna-db:
     container_name: Database
-    image: postgres:alpine
+    image: postgres:16.3
     restart: always
     environment:
       - POSTGRES_DB=quizyzuna-db

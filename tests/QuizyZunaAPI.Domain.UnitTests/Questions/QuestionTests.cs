@@ -39,20 +39,22 @@ public class QuestionTests
         ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
         Themes themes = new(themesList);
         var difficulty = Difficulty.Beginner;
-        var era = Era.None;
-        QuestionTags questionTags = new(themes, difficulty, era);
+        QuestionYear date = new("");
+        QuestionTags questionTags = new(themes, difficulty, date);
+        QuestionLastModifiedAt questionLastModifiedAt = new(DateTime.UtcNow);
 
         //Act
-        var result = Question.Create(questionId, title, answers, questionTags);
+        var result = Question.Create(questionId, title, answers, questionTags, questionLastModifiedAt);
 
         //Assert
         result.Id.Value.Should().Be(questionId.Value);
         result.Title.Value.Should().Be(title.Value);
+        result.LastModifiedAt.Value.Should().Be(questionLastModifiedAt.Value);
         result.Answers.CorrectAnswer.Value.Should().Be(correctAnswer.Value);
         result.Answers.WrongAnswers.Value.Should().BeEquivalentTo(wrongAnswersList);
         result.Tags.Themes.Value.Should().BeEquivalentTo(themesList);
         result.Tags.Difficulty.Should().Be(difficulty);
-        result.Tags.Era.Should().Be(era);
+        result.Tags.Year.Should().Be(date);
     }
 
     [Fact]
@@ -101,5 +103,31 @@ public class QuestionTests
 
         //Assert
         result.Should().ThrowExactly<WrongAnswersContainsCorrectAnswerDomainException>().WithMessage($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
+    }
+
+    [Fact]
+    public void QuestionYear_Create_Should_ThrowException_WhenValueIsInvalid()
+    {
+        //Arrange
+        QuestionYear Action() => new("2024");
+
+        //Act
+        var result = FluentActions.Invoking(Action);
+
+        //Assert
+        result.Should().ThrowExactly<QuestionYearIsNotConformDomainException>().WithMessage($"{nameof(QuestionYear)} must be in the format from -99999999999 to +99999999999 with exactly 11 decimals");
+    }
+
+    [Fact]
+    public void QuestionYear_Create_Should_Success_WhenValueIsValid()
+    {
+        //Arrange
+        string validYear = "+00000002024";
+
+        //Act
+        QuestionYear result = new(validYear);
+
+        //Assert
+        result.Value.Should().Be(validYear);
     }
 }

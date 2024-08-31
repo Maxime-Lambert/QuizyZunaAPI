@@ -10,7 +10,7 @@ namespace QuizyZunaAPI.Application.IntegrationTests.Questions;
 public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : BaseIntegrationTest(factory)
 {
     private static readonly CreateQuestionRequest CreateQuestionRequest = new("Is this a Question ?", "Yes", ["No", "Maybe", "?"],
-            "Novice", "Antiquity", ["Literature", "Mangas"]);
+            "Novice", "", ["Literature", "Mangas"]);
 
     [Fact]
     public async Task Create_ShouldAdd_NewQuestionToDatabase_WhenCommandIsValid()
@@ -34,7 +34,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
         var putRequest = new PutQuestionRequest("Did this question change title ?", "Yes", ["No", "Maybe", "?"],
-            "Novice", "Antiquity", ["Literature", "Mangas"]);
+            "Novice", "", ["Literature", "Mangas"]);
         var putCommand = putRequest.ToCommand(command.question.Id.Value);
 
         //Act
@@ -119,15 +119,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
-        request = CreateQuestionRequest with { themes = ["History"], era = "None"};
-        command = request.ToCommand();
-        await Sender.Send(command);
-        DbContext.ChangeTracker.Clear();
-        request = CreateQuestionRequest with { themes = ["History"], era = "Prehistory"};
-        command = request.ToCommand();
-        await Sender.Send(command);
-        DbContext.ChangeTracker.Clear();
-        var getAllRequest = new GetAllQuestionsQuery(3, "Novice", "Antiquity", "Gastronomy,LivingBeings");
+        var getAllRequest = new GetAllQuestionsQuery(3, "Novice", "Gastronomy,LivingBeings", null, null);
 
         //Act
         var result = await Sender.Send(getAllRequest);
@@ -135,7 +127,6 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         //Assert
         result.Count().Should().Be(3);
         result.Should().OnlyContain(question => string.Equals(question.difficulty, "Novice", StringComparison.Ordinal) &&
-                                               string.Equals(question.era, "Antiquity", StringComparison.Ordinal) &&
                                                question.themes.All(theme => string.Equals(theme, "Gastronomy", StringComparison.Ordinal) 
                                                                     || string.Equals(theme, "LivingBeings", StringComparison.Ordinal)));
     }
