@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("QuizyZuna React App", builder =>
     {
-        builder.WithOrigins("*")
+        builder.WithOrigins("https://brave-coast-0cc72c303.5.azurestaticapps.net/")
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
