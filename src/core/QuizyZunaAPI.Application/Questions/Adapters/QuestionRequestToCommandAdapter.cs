@@ -17,11 +17,11 @@ public static class QuestionRequestToCommandAdapter
 
         QuestionId questionId = new(Guid.NewGuid());
         QuestionTitle title = new(request.title);
-        CorrectAnswer correctAnswer = new(request.correctAnswer);
+        CorrectAnswer correctAnswer = new(request.correctAnswer, new TimesAnswered(0));
         Collection<WrongAnswer> wrongAnswersList = [];
         foreach (var wrongAnswer in request.wrongAnswers)
         {
-            wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer));
+            wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer, new TimesAnswered(0)));
         }
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);
@@ -44,11 +44,11 @@ public static class QuestionRequestToCommandAdapter
 
         QuestionId questionId = new(id);
         QuestionTitle title = new(request.title);
-        CorrectAnswer correctAnswer = new(request.correctAnswer);
+        CorrectAnswer correctAnswer = new(request.correctAnswer, new TimesAnswered(0));
         Collection<WrongAnswer> wrongAnswersList = [];
         foreach (var wrongAnswer in request.wrongAnswers)
         {
-            wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer));
+            wrongAnswersList.Add(WrongAnswer.Create(questionId, wrongAnswer, new TimesAnswered(0)));
         }
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);

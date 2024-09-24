@@ -33,11 +33,11 @@ public class PutQuestionCommandTests
         //Arrange
         QuestionId id = new(Guid.NewGuid());
         QuestionTitle title = new("Is this a question ?");
-        CorrectAnswer correctAnswer = new("Yes");
+        CorrectAnswer correctAnswer = new("Yes", new TimesAnswered(0));
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(id, "No"),
-                WrongAnswer.Create(id, "Maybe"),
-                WrongAnswer.Create(id, "Impossible")];
+            [WrongAnswer.Create(id, "No", new TimesAnswered(0)),
+                WrongAnswer.Create(id, "Maybe", new TimesAnswered(0)),
+                WrongAnswer.Create(id, "Impossible", new TimesAnswered(0))];
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(id, Topic.Literature)];
@@ -83,11 +83,11 @@ public class PutQuestionCommandTests
         //Arrange
         QuestionId questionId = new(Guid.NewGuid());
         QuestionTitle title = new("Is this a question ?");
-        CorrectAnswer correctAnswer = new("Yes");
+        CorrectAnswer correctAnswer = new("Yes", new TimesAnswered(0));
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(questionId, "No"),
-                WrongAnswer.Create(questionId, "Maybe"),
-                WrongAnswer.Create(questionId, "Impossible")];
+            [WrongAnswer.Create(questionId, "No", new TimesAnswered(0)),
+                WrongAnswer.Create(questionId, "Maybe", new TimesAnswered(0)),
+                WrongAnswer.Create(questionId, "Impossible", new TimesAnswered(0))];
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
@@ -106,7 +106,8 @@ public class PutQuestionCommandTests
         await _handler.Handle(command, default);
 
         //Assert
-        _questionRepositoryMock.Received(1).Update(Arg.Is<Question>(question => question == command.question));
-        await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        _questionRepositoryMock.Received(1).Delete(Arg.Is<Question>(question => question.Id == command.question.Id));
+        await _questionRepositoryMock.Received(1).AddAsync(Arg.Is<Question>(question => question == command.question));
+        await _unitOfWorkMock.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

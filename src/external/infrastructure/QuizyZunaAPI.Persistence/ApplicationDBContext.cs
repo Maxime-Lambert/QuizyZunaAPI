@@ -15,8 +15,6 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
-        modelBuilder.HasPostgresEnum<Difficulty>();
-        modelBuilder.HasPostgresEnum<Topic>();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

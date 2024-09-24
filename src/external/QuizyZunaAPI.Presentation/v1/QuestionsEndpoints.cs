@@ -11,6 +11,7 @@ using QuizyZunaAPI.Application.Questions.GetRange;
 using QuizyZunaAPI.Application.Questions.GetById;
 using QuizyZunaAPI.Application.Questions.Put;
 using QuizyZunaAPI.Application.Questions.Adapters;
+using QuizyZunaAPI.Application.Questions.AddTimesAnswered;
 
 namespace QuizyZunaAPI.Presentation.v1;
 
@@ -95,6 +96,16 @@ public static class QuestionsEndpoints
             return Results.NoContent();
         })
         .WithName("DeleteQuestion")
+        .MapToApiVersion(1)
+        .RequireRateLimiting("basic");
+
+        questionEndpoints.MapPatch("/addTimesAnswered", async (AddTimesAnsweredCommand addTimesAnsweredCommand, ISender sender) =>
+        {
+            await sender.Send(addTimesAnsweredCommand).ConfigureAwait(true);
+
+            return Results.NoContent();
+        })
+        .WithName("AddTimesAnswered")
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 

@@ -1,11 +1,15 @@
 ﻿using QuizyZunaAPI.Domain.Questions.Entities;
-using QuizyZunaAPI.Domain.Questions.Exceptions;
 
 namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record Themes
 {
-    public IEnumerable<Theme> Value { get; private init; } = new List<Theme>();
+    public IEnumerable<Theme> Value { get; private set; } = new List<Theme>();
+
+    public void Clear()
+    {
+        Value = new List<Theme>();
+    }
 
     private Themes() { }
 

@@ -21,7 +21,7 @@ public sealed class QuestionRepository(ApplicationDbContext context) : IQuestion
 
     public Task<Question?> GetByIdAsync(QuestionId questionId, CancellationToken cancellationToken)
     {
-        return _context.Questions.SingleOrDefaultAsync(question => question.Id == questionId, cancellationToken);
+        return _context.Questions.Include(question => question.Answers).Include(question => question.Tags).SingleOrDefaultAsync(question => question.Id == questionId, cancellationToken);
     }
 
     public Task<List<Question>> GetAllAsync(CancellationToken cancellationToken)
@@ -33,4 +33,11 @@ public sealed class QuestionRepository(ApplicationDbContext context) : IQuestion
     {
         _context.Questions.Update(question);
     }
+
+    public Task<Question?> GetByTitleAsync(QuestionTitle questionTitle, CancellationToken cancellationToken)
+    {
+        return _context.Questions.SingleOrDefaultAsync(question => question.Title == questionTitle, cancellationToken);
+    }
+
+
 }

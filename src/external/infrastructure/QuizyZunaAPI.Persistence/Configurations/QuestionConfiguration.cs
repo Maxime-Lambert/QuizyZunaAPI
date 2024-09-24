@@ -30,13 +30,21 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
         {
             answersBuilder.OwnsOne(answers => answers.WrongAnswers, wrongAnswersBuilder =>
             {
-                wrongAnswersBuilder.OwnsMany(wrongAnswers => wrongAnswers.Value)
-                                        .WithOwner()
-                                        .HasForeignKey(wrongAnswer => wrongAnswer.QuestionId);
+                wrongAnswersBuilder.OwnsMany(wrongAnswers => wrongAnswers.Value, wrongAnswerBuilder =>
+                {
+                    wrongAnswerBuilder.Property(wrongAnswer => wrongAnswer.TimesAnswered).HasConversion(
+                        timesAnswered => timesAnswered!.Value,
+                        value => new TimesAnswered(value));
+                    wrongAnswerBuilder.WithOwner().HasForeignKey(wrongAnswer => wrongAnswer.QuestionId);
+                });
             });
-            answersBuilder.Property(answers => answers.CorrectAnswer).HasConversion(
-                            correctAnswer => correctAnswer!.Value,
-                            value => new CorrectAnswer(value));
+
+            answersBuilder.OwnsOne(answers => answers.CorrectAnswer, correctAnswerBuilder =>
+            {
+                correctAnswerBuilder.Property(correctAnswer => correctAnswer.TimesAnswered).HasConversion(
+                    timesAnswered => timesAnswered!.Value,
+                    value => new TimesAnswered(value));
+            });
         });
 
         builder.OwnsOne(question => question.Tags, tagsBuilder =>

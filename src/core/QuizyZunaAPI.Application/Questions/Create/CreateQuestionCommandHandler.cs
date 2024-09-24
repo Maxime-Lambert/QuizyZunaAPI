@@ -7,10 +7,10 @@ using QuizyZunaAPI.Domain.Questions;
 
 namespace QuizyZunaAPI.Application.Questions.Create;
 
-public sealed class CreateQuestionCommandHandler(IUnitOfWork caca, IQuestionRepository questionRepository) 
+public sealed class CreateQuestionCommandHandler(IUnitOfWork unitOfWork, IQuestionRepository questionRepository) 
     : IRequestHandler<CreateQuestionCommand, QuestionResponse>
 {
-    private readonly IUnitOfWork _unitOfWork = caca;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IQuestionRepository _questionRepository = questionRepository;
 
     public async Task<QuestionResponse> Handle(CreateQuestionCommand request, CancellationToken cancellationToken)

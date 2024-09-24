@@ -14,13 +14,13 @@ public class QuestionTests
         new()
         {
             new Collection<WrongAnswer>(),
-            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1")},
-            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1"),
-                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 2")},
-            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1"),
-                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 2"),
-                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 3"),
-                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 4")}
+            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1", new TimesAnswered(0))},
+            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1", new TimesAnswered(0)),
+                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 2", new TimesAnswered(0))},
+            new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1", new TimesAnswered(0)),
+                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 2", new TimesAnswered(0)),
+                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 3", new TimesAnswered(0)),
+                                            WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 4", new TimesAnswered(0))}
         };
 
     [Fact]
@@ -29,11 +29,11 @@ public class QuestionTests
         //Arrange
         QuestionId questionId = new(Guid.NewGuid());
         QuestionTitle title = new("Is this a question ?");
-        CorrectAnswer correctAnswer = new("Yes");
+        CorrectAnswer correctAnswer = new("Yes", new TimesAnswered(0));
         ICollection<WrongAnswer> wrongAnswersList = 
-            [WrongAnswer.Create(questionId, "No"),
-            WrongAnswer.Create(questionId, "Maybe"),
-            WrongAnswer.Create(questionId, "Impossible")];
+            [WrongAnswer.Create(questionId, "No", new TimesAnswered(0)),
+            WrongAnswer.Create(questionId, "Maybe", new TimesAnswered(0)),
+            WrongAnswer.Create(questionId, "Impossible", new TimesAnswered(0))];
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(questionId, Topic.Literature)];
@@ -89,11 +89,11 @@ public class QuestionTests
     {
         //Arrange
         var questionId = new QuestionId(Guid.NewGuid());
-        var correctAnswer = new CorrectAnswer("Yes");
+        var correctAnswer = new CorrectAnswer("Yes", new TimesAnswered(0));
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(questionId, "Yes"),
-                WrongAnswer.Create(questionId, "Maybe"),
-                WrongAnswer.Create(questionId, "Impossible")];
+            [WrongAnswer.Create(questionId, "Yes", new TimesAnswered(0)),
+                WrongAnswer.Create(questionId, "Maybe", new TimesAnswered(0)),
+                WrongAnswer.Create(questionId, "Impossible", new TimesAnswered(0))];
         var wrongAnswers = new WrongAnswers(wrongAnswersList);
 
         Answers Action() => new(correctAnswer, wrongAnswers);

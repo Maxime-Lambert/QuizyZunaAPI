@@ -43,11 +43,11 @@ public class DeleteQuestionCommandTests
         //Arrange
         QuestionId id = new(Guid.NewGuid());
         QuestionTitle title = new("Is this a question ?");
-        CorrectAnswer correctAnswer = new("Yes");
+        CorrectAnswer correctAnswer = new("Yes", new TimesAnswered(0));
         ICollection<WrongAnswer> wrongAnswersList =
-            [WrongAnswer.Create(id, "No"),
-                WrongAnswer.Create(id, "Maybe"),
-                WrongAnswer.Create(id, "Impossible")];
+            [WrongAnswer.Create(id, "No", new TimesAnswered(0)),
+                WrongAnswer.Create(id, "Maybe", new TimesAnswered(0)),
+                WrongAnswer.Create(id, "Impossible", new TimesAnswered(0))];
         WrongAnswers wrongAnswers = new(wrongAnswersList);
         Answers answers = new(correctAnswer, wrongAnswers);
         ICollection<Theme> themesList = [Theme.Create(id, Topic.Literature)];

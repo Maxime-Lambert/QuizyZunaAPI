@@ -12,5 +12,7 @@ public interface IQuestionRepository
 
     public Task<Question?> GetByIdAsync(QuestionId questionId, CancellationToken cancellationToken);
 
+    public Task<Question?> GetByTitleAsync(QuestionTitle questionTitle, CancellationToken cancellationToken);
+
     public Task<List<Question>> GetAllAsync(CancellationToken cancellationToken);
 }

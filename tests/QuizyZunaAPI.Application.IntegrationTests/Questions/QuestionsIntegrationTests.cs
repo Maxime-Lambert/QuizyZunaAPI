@@ -82,7 +82,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
     public async Task GetAll_ShouldReturn_ThreeQuestions_WhenCommandIsValid()
     {
         //Arrange
-        var request = CreateQuestionRequest with { themes = ["Gastronomy", "LivingBeings"] };
+        var request = CreateQuestionRequest with { themes = ["Gastronomy", "LifeSciences"] };
         var command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
@@ -90,7 +90,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
-        request = CreateQuestionRequest with { themes = ["LivingBeings"] };
+        request = CreateQuestionRequest with { themes = ["LifeSciences"] };
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
@@ -107,7 +107,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
-        request = CreateQuestionRequest with { themes = ["Architecture"] };
+        request = CreateQuestionRequest with { themes = ["MatterSciences"] };
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
@@ -119,7 +119,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         command = request.ToCommand();
         await Sender.Send(command);
         DbContext.ChangeTracker.Clear();
-        var getAllRequest = new GetAllQuestionsQuery(3, "Novice", "Gastronomy,LivingBeings", null, null);
+        var getAllRequest = new GetAllQuestionsQuery(3, "Novice", "Gastronomy,LifeSciences", null, null);
 
         //Act
         var result = await Sender.Send(getAllRequest);
@@ -128,6 +128,6 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         result.Count().Should().Be(3);
         result.Should().OnlyContain(question => string.Equals(question.difficulty, "Novice", StringComparison.Ordinal) &&
                                                question.themes.All(theme => string.Equals(theme, "Gastronomy", StringComparison.Ordinal) 
-                                                                    || string.Equals(theme, "LivingBeings", StringComparison.Ordinal)));
+                                                                    || string.Equals(theme, "LifeSciences", StringComparison.Ordinal)));
     }
 }
