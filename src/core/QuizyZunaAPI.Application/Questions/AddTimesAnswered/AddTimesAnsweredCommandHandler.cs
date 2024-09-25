@@ -25,7 +25,11 @@ public sealed class AddTimesAnsweredCommandHandler(IUnitOfWork unitOfWork, IQues
             throw new QuestionNotFoundApplicationException($"A question with {request.QuestionTitle} can't be found");
         }
 
-        if(string.Equals(question.Answers.CorrectAnswer.Value,request.AnswerGiven,StringComparison.Ordinal))
+        _questionRepository.Delete(question);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+
+        if (string.Equals(question.Answers.CorrectAnswer.Value,request.AnswerGiven,StringComparison.Ordinal))
         {
             question.Answers.CorrectAnswer.TimesAnswered.AddOne();
         } else
@@ -34,9 +38,9 @@ public sealed class AddTimesAnsweredCommandHandler(IUnitOfWork unitOfWork, IQues
                 .FirstOrDefault(wrongAnswer => string.Equals(wrongAnswer.Value, request.AnswerGiven, StringComparison.Ordinal))!
                 .TimesAnswered.AddOne();
         }
+        question.LastModifiedAt = new(DateTime.UtcNow);
+        await _questionRepository.AddAsync(question).ConfigureAwait(true);
 
-        _questionRepository.Update(question);
-        
         await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
     }
 }
