@@ -11,8 +11,7 @@ namespace QuizyZunaAPI.Domain.UnitTests.Questions;
 public class QuestionTests
 {
     public static TheoryData<Collection<WrongAnswer>> InvalidWrongAnswerValues =>
-        new()
-        {
+        [
             new Collection<WrongAnswer>(),
             new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1", new TimesAnswered(0))},
             new Collection<WrongAnswer>() { WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 1", new TimesAnswered(0)),
@@ -21,7 +20,7 @@ public class QuestionTests
                                             WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 2", new TimesAnswered(0)),
                                             WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 3", new TimesAnswered(0)),
                                             WrongAnswer.Create(new QuestionId(Guid.NewGuid()), "Answer 4", new TimesAnswered(0))}
-        };
+        ];
 
     [Fact]
     public void Create_Should_Suceed_WhenValueIsValid()
@@ -30,7 +29,7 @@ public class QuestionTests
         QuestionId questionId = new(Guid.NewGuid());
         QuestionTitle title = new("Is this a question ?");
         CorrectAnswer correctAnswer = new("Yes", new TimesAnswered(0));
-        ICollection<WrongAnswer> wrongAnswersList = 
+        ICollection<WrongAnswer> wrongAnswersList =
             [WrongAnswer.Create(questionId, "No", new TimesAnswered(0)),
             WrongAnswer.Create(questionId, "Maybe", new TimesAnswered(0)),
             WrongAnswer.Create(questionId, "Impossible", new TimesAnswered(0))];
@@ -47,14 +46,14 @@ public class QuestionTests
         var result = Question.Create(questionId, title, answers, questionTags, questionLastModifiedAt);
 
         //Assert
-        result.Id.Value.Should().Be(questionId.Value);
-        result.Title.Value.Should().Be(title.Value);
-        result.LastModifiedAt.Value.Should().Be(questionLastModifiedAt.Value);
-        result.Answers.CorrectAnswer.Value.Should().Be(correctAnswer.Value);
-        result.Answers.WrongAnswers.Value.Should().BeEquivalentTo(wrongAnswersList);
-        result.Tags.Themes.Value.Should().BeEquivalentTo(themesList);
-        result.Tags.Difficulty.Should().Be(difficulty);
-        result.Tags.Year.Should().Be(date);
+        _ = result.Id.Value.Should().Be(questionId.Value);
+        _ = result.Title.Value.Should().Be(title.Value);
+        _ = result.LastModifiedAt.Value.Should().Be(questionLastModifiedAt.Value);
+        _ = result.Answers.CorrectAnswer.Value.Should().Be(correctAnswer.Value);
+        _ = result.Answers.WrongAnswers.Value.Should().BeEquivalentTo(wrongAnswersList);
+        _ = result.Tags.Themes.Value.Should().BeEquivalentTo(themesList);
+        _ = result.Tags.Difficulty.Should().Be(difficulty);
+        _ = result.Tags.Year.Should().Be(date);
     }
 
     [Fact]
@@ -67,7 +66,7 @@ public class QuestionTests
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().ThrowExactly<ArgumentException>();
+        _ = result.Should().ThrowExactly<ArgumentException>();
     }
 
     [Theory]
@@ -81,7 +80,7 @@ public class QuestionTests
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().ThrowExactly<WrongAnswersDoesNotContainThreeElementsDomainException>().WithMessage($"{nameof(wrongAnswers)} must contain 3 elements");
+        _ = result.Should().ThrowExactly<WrongAnswersDoesNotContainThreeElementsDomainException>().WithMessage($"{nameof(wrongAnswers)} must contain 3 elements");
     }
 
     [Fact]
@@ -102,7 +101,7 @@ public class QuestionTests
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().ThrowExactly<WrongAnswersContainsCorrectAnswerDomainException>().WithMessage($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
+        _ = result.Should().ThrowExactly<WrongAnswersContainsCorrectAnswerDomainException>().WithMessage($"{nameof(correctAnswer)} can't be contained by {nameof(WrongAnswers)}");
     }
 
     [Fact]
@@ -115,7 +114,7 @@ public class QuestionTests
         var result = FluentActions.Invoking(Action);
 
         //Assert
-        result.Should().ThrowExactly<QuestionYearIsNotConformDomainException>().WithMessage($"{nameof(QuestionYear)} must be in the format from -99999999999 to +99999999999 with exactly 11 decimals");
+        _ = result.Should().ThrowExactly<QuestionYearIsNotConformDomainException>().WithMessage($"{nameof(QuestionYear)} must be in the format from -99999999999 to +99999999999 with exactly 11 decimals");
     }
 
     [Fact]
@@ -128,6 +127,6 @@ public class QuestionTests
         QuestionYear result = new(validYear);
 
         //Assert
-        result.Value.Should().Be(validYear);
+        _ = result.Value.Should().Be(validYear);
     }
 }

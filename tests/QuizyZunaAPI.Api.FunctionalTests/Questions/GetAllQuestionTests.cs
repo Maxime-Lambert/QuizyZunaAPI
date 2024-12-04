@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using QuizyZunaAPI.Application.Questions.Create;
+using System.Net;
 using System.Net.Http.Json;
-
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
 
 namespace QuizyZunaAPI.Api.FunctionalTests.Questions;
 
@@ -19,7 +18,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(BaseApiUrl);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -32,7 +31,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -45,7 +44,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -58,7 +57,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -71,7 +70,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -84,7 +83,7 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -97,6 +96,6 @@ public class GetAllQuestionTests(FunctionalTestWebAppFactory functionalTestWebAp
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

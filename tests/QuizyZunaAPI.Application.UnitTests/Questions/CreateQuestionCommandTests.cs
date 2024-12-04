@@ -1,6 +1,5 @@
 using QuizyZunaAPI.Application.Questions.Adapters;
 using QuizyZunaAPI.Application.Questions.Create;
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
 using QuizyZunaAPI.Domain.Questions;
 
 namespace QuizyZunaAPI.Application.UnitTests.Questions;
@@ -32,6 +31,6 @@ public class CreateQuestionCommandTests
 
         //Assert
         await _questionRepositoryMock.Received(1).AddAsync(Arg.Is<Question>(question => question.Id == command.question.Id));
-        await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        _ = await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

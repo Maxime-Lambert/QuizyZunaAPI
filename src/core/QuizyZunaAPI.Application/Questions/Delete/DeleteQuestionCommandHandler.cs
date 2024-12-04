@@ -14,12 +14,12 @@ public sealed class DeleteQuestionCommandHandler(IQuestionRepository questionRep
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionId), cancellationToken).ConfigureAwait(true);
-        
-        if(question is not null)
+        Question? question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionId), cancellationToken).ConfigureAwait(true);
+
+        if (question is not null)
         {
             _questionRepository.Delete(question);
-            await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+            _ = await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
         }
     }
 }

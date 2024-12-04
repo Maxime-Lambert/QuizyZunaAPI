@@ -1,4 +1,4 @@
-﻿using QuizyZunaAPI.Application.Questions.CreateQuestion;
+﻿using QuizyZunaAPI.Application.Questions.Create;
 using QuizyZunaAPI.Application.Questions.GetById;
 using QuizyZunaAPI.Application.Questions.Responses;
 
@@ -25,7 +25,7 @@ public class GetByIdQuestionTests(FunctionalTestWebAppFactory functionalTestWebA
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -33,12 +33,12 @@ public class GetByIdQuestionTests(FunctionalTestWebAppFactory functionalTestWebA
     {
         //Arrange
         GetQuestionByIdQuery request = new(Guid.NewGuid());
-        var requestPath =  new Uri(BaseApiUrl, request.questionid.ToString());
+        var requestPath = new Uri(BaseApiUrl, request.questionid.ToString());
 
         //Act
         var response = await HttpClient.GetAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 }

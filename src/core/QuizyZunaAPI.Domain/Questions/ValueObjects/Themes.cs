@@ -8,7 +8,7 @@ public sealed record Themes
 
     public void Clear()
     {
-        Value = new List<Theme>();
+        Value = [];
     }
 
     private Themes() { }

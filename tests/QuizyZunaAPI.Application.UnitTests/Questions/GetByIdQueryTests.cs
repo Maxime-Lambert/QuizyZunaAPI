@@ -44,14 +44,14 @@ public class GetByIdQueryTests
         QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
         var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
-        _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId.Value == GetQuestionByIdQuery.questionid), Arg.Any<CancellationToken>())
+        _ = _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId.Value == GetQuestionByIdQuery.questionid), Arg.Any<CancellationToken>())
             .Returns(question);
 
         //Act
-        await _handler.Handle(GetQuestionByIdQuery, default);
+        _ = await _handler.Handle(GetQuestionByIdQuery, default);
 
         //Assert
-        await _questionRepositoryMock.Received(1).GetByIdAsync(
+        _ = await _questionRepositoryMock.Received(1).GetByIdAsync(
             Arg.Is<QuestionId>(question => question.Value == GetQuestionByIdQuery.questionid),
             Arg.Any<CancellationToken>());
     }
@@ -60,7 +60,7 @@ public class GetByIdQueryTests
     public async Task Handle_ShouldThrow_QuestionNotFound_WhenIdDoesntExist()
     {
         //Arrange
-        _questionRepositoryMock.GetByIdAsync(
+        _ = _questionRepositoryMock.GetByIdAsync(
             Arg.Is<QuestionId>(questionId => questionId.Value == GetQuestionByIdQuery.questionid),
             Arg.Any<CancellationToken>()).ReturnsNull();
         Task<QuestionResponse> Action() => _handler.Handle(GetQuestionByIdQuery, default);
@@ -69,7 +69,7 @@ public class GetByIdQueryTests
         var result = FluentActions.Awaiting(Action);
 
         //Assert
-        await result.Should().ThrowExactlyAsync<QuestionNotFoundApplicationException>()
+        _ = await result.Should().ThrowExactlyAsync<QuestionNotFoundApplicationException>()
             .WithMessage($"A question with {GetQuestionByIdQuery.questionid} can't be found");
     }
 }

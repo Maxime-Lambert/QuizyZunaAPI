@@ -16,9 +16,9 @@ public sealed class GetQuestionByIdQueryHandler(IQuestionRepository questionRepo
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionid), cancellationToken).ConfigureAwait(true);
+        Question? question = await _questionRepository.GetByIdAsync(new QuestionId(request.questionid), cancellationToken).ConfigureAwait(true);
 
-        if(question is null)
+        if (question is null)
         {
             throw new QuestionNotFoundApplicationException($"A question with {request.questionid} can't be found");
         }

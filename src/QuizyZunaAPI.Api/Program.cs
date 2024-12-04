@@ -11,8 +11,9 @@ using Serilog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
+using Asp.Versioning.Builder;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -21,25 +22,18 @@ builder.Services.AddPersistence()
                 .AddApplication()
                 .AddPresentation(builder);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("QuizyZuna React App", builder =>
-    {
-        builder.WithOrigins("https://brave-coast-0cc72c303.5.azurestaticapps.net/")
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
+builder.Services.AddCors(options => options.AddPolicy("QuizyZuna React App", builder =>
+    builder.WithOrigins("https://brave-coast-0cc72c303.5.azurestaticapps.net/")
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
 
-var app = builder.Build(); 
+WebApplication app = builder.Build();
 
 if (!app.Environment.IsProduction())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await db.Database.MigrateAsync().ConfigureAwait(false);
-    }
+    using IServiceScope scope = app.Services.CreateScope();
+    ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync().ConfigureAwait(false);
 }
 
 app.UseSwagger();
@@ -49,8 +43,8 @@ app.UseSwaggerUI(options =>
 
     foreach (var groupName in descriptions.Select(description => description.GroupName))
     {
-        string url = $"/swagger/{groupName}/swagger.json";
-        string name = groupName.ToUpperInvariant();
+        var url = $"/swagger/{groupName}/swagger.json";
+        var name = groupName.ToUpperInvariant();
         options.SwaggerEndpoint(url, name);
     }
 });
@@ -65,7 +59,7 @@ app.UseRateLimiter();
 
 app.UseCors("QuizyZuna React App");
 
-var apiVersionSet = app.NewApiVersionSet()
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
     .ReportApiVersions()
     .Build();
@@ -83,7 +77,7 @@ versionedGroup.MapHealthChecks("health", new HealthCheckOptions
 
 await app.RunAsync().ConfigureAwait(false);
 
-public partial class Program 
+public partial class Program
 {
     protected Program() { }
 }

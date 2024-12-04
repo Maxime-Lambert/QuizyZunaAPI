@@ -18,7 +18,7 @@ public sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(ILogger<
 
         logger.LogStartingRequest(requestName);
 
-        var response = await next().ConfigureAwait(true);
+        TResponse? response = await next().ConfigureAwait(true);
 
         logger.LogFinishedRequest(requestName);
 

@@ -5,13 +5,14 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
 using QuizyZunaAPI.Application.Questions.Delete;
-using QuizyZunaAPI.Application.Questions.GetRange;
 using QuizyZunaAPI.Application.Questions.GetById;
 using QuizyZunaAPI.Application.Questions.Put;
 using QuizyZunaAPI.Application.Questions.Adapters;
 using QuizyZunaAPI.Application.Questions.AddTimesAnswered;
+using QuizyZunaAPI.Application.Questions.GetAll;
+using QuizyZunaAPI.Application.Questions.Responses;
+using QuizyZunaAPI.Application.Questions.Create;
 
 namespace QuizyZunaAPI.Presentation.v1;
 
@@ -21,18 +22,18 @@ public static class QuestionsEndpoints
 
     public static IEndpointRouteBuilder MapQuestionEndpoints(this IEndpointRouteBuilder app)
     {
-        var questionEndpoints = app.MapGroup(QuestionsEndpointRouteValue);
+        RouteGroupBuilder questionEndpoints = app.MapGroup(QuestionsEndpointRouteValue);
 
-        questionEndpoints.MapGet("", async (int? amount, string? difficulties, string? themes,
-            bool? orderByAscendantDifficulty, bool? randomize, IValidator <GetAllQuestionsQuery> validator, ISender sender) =>
+        _ = questionEndpoints.MapGet("", async (int? amount, string? difficulties, string? themes,
+            bool? orderByAscendantDifficulty, bool? randomize, IValidator<GetAllQuestionsQuery> validator, ISender sender) =>
         {
             var request = new GetAllQuestionsQuery(amount, difficulties, themes, orderByAscendantDifficulty, randomize);
 
-            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
+            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request).ConfigureAwait(true);
+                IEnumerable<QuestionWithoutIdResponse> result = await sender.Send(request).ConfigureAwait(true);
 
                 return Results.Ok(result);
             }
@@ -43,9 +44,9 @@ public static class QuestionsEndpoints
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 
-        questionEndpoints.MapGet("/{id:guid}", async (Guid id, ISender sender) =>
+        _ = questionEndpoints.MapGet("/{id:guid}", async (Guid id, ISender sender) =>
         {
-            var question = await sender.Send(new GetQuestionByIdQuery(id)).ConfigureAwait(true);
+            QuestionResponse question = await sender.Send(new GetQuestionByIdQuery(id)).ConfigureAwait(true);
 
             return Results.Ok(question);
         })
@@ -53,14 +54,14 @@ public static class QuestionsEndpoints
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 
-        questionEndpoints.MapPost("", async (CreateQuestionRequest request, IValidator<CreateQuestionRequest> validator,
+        _ = questionEndpoints.MapPost("", async (CreateQuestionRequest request, IValidator<CreateQuestionRequest> validator,
             ISender sender, HttpContext context) =>
         {
-            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
+            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request.ToCommand()).ConfigureAwait(true);
+                QuestionResponse result = await sender.Send(request.ToCommand()).ConfigureAwait(true);
 
                 return Results.CreatedAtRoute("GetQuestion", new { result.id }, result);
             }
@@ -71,14 +72,14 @@ public static class QuestionsEndpoints
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 
-        questionEndpoints.MapPut("/{id:guid}", async (Guid id, PutQuestionRequest request, IValidator<PutQuestionRequest> validator,
+        _ = questionEndpoints.MapPut("/{id:guid}", async (Guid id, PutQuestionRequest request, IValidator<PutQuestionRequest> validator,
             ISender sender) =>
         {
-            var validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
+            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(request, default).ConfigureAwait(true);
 
             if (validationResult.IsValid)
             {
-                var result = await sender.Send(request.ToCommand(id)).ConfigureAwait(true);
+                Domain.Questions.Question result = await sender.Send(request.ToCommand(id)).ConfigureAwait(true);
 
                 return Results.Ok(result);
             }
@@ -89,7 +90,7 @@ public static class QuestionsEndpoints
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 
-        questionEndpoints.MapDelete("/{id:guid}", async (Guid id, ISender sender) =>
+        _ = questionEndpoints.MapDelete("/{id:guid}", async (Guid id, ISender sender) =>
         {
             await sender.Send(new DeleteQuestionCommand(id)).ConfigureAwait(true);
 
@@ -99,7 +100,7 @@ public static class QuestionsEndpoints
         .MapToApiVersion(1)
         .RequireRateLimiting("basic");
 
-        questionEndpoints.MapPatch("/addTimesAnswered", async (AddTimesAnsweredCommand addTimesAnsweredCommand, ISender sender) =>
+        _ = questionEndpoints.MapPatch("/addTimesAnswered", async (AddTimesAnsweredCommand addTimesAnsweredCommand, ISender sender) =>
         {
             await sender.Send(addTimesAnsweredCommand).ConfigureAwait(true);
 

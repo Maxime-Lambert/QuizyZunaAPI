@@ -12,53 +12,44 @@ public sealed class QuestionConfiguration : IEntityTypeConfiguration<Question>
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.HasKey(question => question.Id);
+        _ = builder.HasKey(question => question.Id);
 
-        builder.Property(question => question.Id).HasConversion(
+        _ = builder.Property(question => question.Id).HasConversion(
             questionId => questionId!.Value,
             value => new QuestionId(value));
 
-        builder.Property(question => question.Title).HasConversion(
+        _ = builder.Property(question => question.Title).HasConversion(
             title => title!.Value,
             value => new QuestionTitle(value));
 
-        builder.Property(question => question.LastModifiedAt).HasConversion(
+        _ = builder.Property(question => question.LastModifiedAt).HasConversion(
             lastModifiedAt => lastModifiedAt!.Value,
             value => new QuestionLastModifiedAt(value));
 
-        builder.OwnsOne(question => question.Answers, answersBuilder =>
+        _ = builder.OwnsOne(question => question.Answers, answersBuilder =>
         {
-            answersBuilder.OwnsOne(answers => answers.WrongAnswers, wrongAnswersBuilder =>
-            {
-                wrongAnswersBuilder.OwnsMany(wrongAnswers => wrongAnswers.Value, wrongAnswerBuilder =>
+            _ = answersBuilder.OwnsOne(answers => answers.WrongAnswers, wrongAnswersBuilder => _ = wrongAnswersBuilder.OwnsMany(wrongAnswers => wrongAnswers.Value, wrongAnswerBuilder =>
                 {
-                    wrongAnswerBuilder.Property(wrongAnswer => wrongAnswer.TimesAnswered).HasConversion(
+                    _ = wrongAnswerBuilder.Property(wrongAnswer => wrongAnswer.TimesAnswered).HasConversion(
                         timesAnswered => timesAnswered!.Value,
                         value => new TimesAnswered(value));
-                    wrongAnswerBuilder.WithOwner().HasForeignKey(wrongAnswer => wrongAnswer.QuestionId);
-                });
-            });
+                    _ = wrongAnswerBuilder.WithOwner().HasForeignKey(wrongAnswer => wrongAnswer.QuestionId);
+                }));
 
-            answersBuilder.OwnsOne(answers => answers.CorrectAnswer, correctAnswerBuilder =>
-            {
-                correctAnswerBuilder.Property(correctAnswer => correctAnswer.TimesAnswered).HasConversion(
+            _ = answersBuilder.OwnsOne(answers => answers.CorrectAnswer, correctAnswerBuilder => _ = correctAnswerBuilder.Property(correctAnswer => correctAnswer.TimesAnswered).HasConversion(
                     timesAnswered => timesAnswered!.Value,
-                    value => new TimesAnswered(value));
-            });
+                    value => new TimesAnswered(value)));
         });
 
-        builder.OwnsOne(question => question.Tags, tagsBuilder =>
+        _ = builder.OwnsOne(question => question.Tags, tagsBuilder =>
         {
-            tagsBuilder.OwnsOne(tags => tags.Themes, themesBuilder =>
-            {
-                themesBuilder.OwnsMany(themes => themes.Value)
+            _ = tagsBuilder.OwnsOne(tags => tags.Themes, themesBuilder => _ = themesBuilder.OwnsMany(themes => themes.Value)
                                         .WithOwner()
-                                        .HasForeignKey(theme => theme.QuestionId);
-            });
+                                        .HasForeignKey(theme => theme.QuestionId));
 
-            tagsBuilder.Property(tags => tags.Difficulty);
+            _ = tagsBuilder.Property(tags => tags.Difficulty);
 
-            tagsBuilder.Property(tags => tags.Year).HasConversion(
+            _ = tagsBuilder.Property(tags => tags.Year).HasConversion(
                             year => year!.Value,
                             value => new QuestionYear(value));
         });

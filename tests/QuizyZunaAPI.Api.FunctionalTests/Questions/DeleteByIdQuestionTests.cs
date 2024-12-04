@@ -16,6 +16,6 @@ public class DeleteByIdQuestionTests(FunctionalTestWebAppFactory functionalTestW
         var response = await HttpClient.DeleteAsync(requestPath);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 }

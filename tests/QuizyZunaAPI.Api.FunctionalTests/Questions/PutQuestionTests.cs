@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
+using QuizyZunaAPI.Application.Questions.Create;
 using QuizyZunaAPI.Application.Questions.Put;
 using QuizyZunaAPI.Application.Questions.Responses;
 
@@ -27,7 +26,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, _putQuestionRequest);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -42,7 +41,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -57,7 +56,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -72,7 +71,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -87,7 +86,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -102,7 +101,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -117,7 +116,7 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -132,6 +131,6 @@ public class PutQuestionTests(FunctionalTestWebAppFactory functionalTestWebAppFa
         var response = await HttpClient.PutAsJsonAsync(requestPath, request);
 
         //Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        _ = response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

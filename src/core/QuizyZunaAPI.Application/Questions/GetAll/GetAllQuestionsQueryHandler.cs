@@ -6,9 +6,9 @@ using QuizyZunaAPI.Application.Questions.Responses;
 using QuizyZunaAPI.Domain.Questions;
 using QuizyZunaAPI.Domain.Questions.Enumerations;
 
-namespace QuizyZunaAPI.Application.Questions.GetRange;
+namespace QuizyZunaAPI.Application.Questions.GetAll;
 
-public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepository) : 
+public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepository) :
     IRequestHandler<GetAllQuestionsQuery, IEnumerable<QuestionWithoutIdResponse>>
 {
     private const int DEFAULT_NUMBER_OF_QUESTIONS_PER_QUERY = 40;
@@ -18,32 +18,32 @@ public sealed class GetAllQuestionsQueryHandler(IQuestionRepository questionRepo
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var questions = await _questionRepository.GetAllAsync(cancellationToken).ConfigureAwait(true);
+        List<Question> questions = await _questionRepository.GetAllAsync(cancellationToken).ConfigureAwait(true);
 
         var numberOfQuestions = DEFAULT_NUMBER_OF_QUESTIONS_PER_QUERY;
 
-        if(request.amount is not null)
+        if (request.amount is not null)
         {
             numberOfQuestions = request.amount.Value;
         }
 
-        IEnumerable<Difficulty> difficulties = Enum.GetValues(typeof(Difficulty)).Cast<Difficulty>();
-        if(!string.IsNullOrEmpty(request.difficulties))
+        IEnumerable<Difficulty> difficulties = Enum.GetValues<Difficulty>();
+        if (!string.IsNullOrEmpty(request.difficulties))
         {
-            difficulties = request.difficulties.Split(',').Select(difficulty => (Difficulty)Enum.Parse(typeof(Difficulty), difficulty));
+            difficulties = request.difficulties.Split(',').Select(Enum.Parse<Difficulty>);
         }
 
-        IEnumerable<Topic> themes = Enum.GetValues(typeof(Topic)).Cast<Topic>();
+        IEnumerable<Topic> themes = Enum.GetValues<Topic>();
         if (!string.IsNullOrEmpty(request.themes))
         {
-            themes = request.themes.Split(',').Select(theme => (Topic)Enum.Parse(typeof(Topic), theme));
+            themes = request.themes.Split(',').Select(Enum.Parse<Topic>);
         }
 
-        var filteredQuestions = questions?.Where(question =>
+        IEnumerable<Question>? filteredQuestions = questions?.Where(question =>
                                     difficulties.Contains(question.Tags.Difficulty) &&
                                     themes.Intersect(question.Tags.Themes.Value.Select(theme => theme.Value)).Any());
 
-        if(filteredQuestions is null || !filteredQuestions.Any())
+        if (filteredQuestions is null || !filteredQuestions.Any())
         {
             throw new QuestionsNotFoundWithFiltersApplicationException("No questions can be found with these filters");
         }

@@ -2,7 +2,6 @@
 
 using QuizyZunaAPI.Application.Questions.Adapters;
 using QuizyZunaAPI.Application.Questions.Exceptions;
-using QuizyZunaAPI.Application.Questions.GetById;
 using QuizyZunaAPI.Application.Questions.Put;
 using QuizyZunaAPI.Domain.Questions;
 using QuizyZunaAPI.Domain.Questions.Entities;
@@ -49,14 +48,14 @@ public class PutQuestionCommandTests
         var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
         var command = PutQuestionRequest.ToCommand(Guid.NewGuid());
-        _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())
+        _ = _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())
             .Returns(question);
 
         //Act
-        await _handler.Handle(command, default);
+        _ = await _handler.Handle(command, default);
 
         //Assert
-        await _questionRepositoryMock.Received(1).GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>());
+        _ = await _questionRepositoryMock.Received(1).GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -64,7 +63,7 @@ public class PutQuestionCommandTests
     {
         //Arrange
         var command = PutQuestionRequest.ToCommand(Guid.NewGuid());
-        _questionRepositoryMock.GetByIdAsync(
+        _ = _questionRepositoryMock.GetByIdAsync(
             Arg.Is<QuestionId>(questionId => questionId == command.question.Id),
             Arg.Any<CancellationToken>()).ReturnsNull();
         Task<Question> Action() => _handler.Handle(command, default);
@@ -73,7 +72,7 @@ public class PutQuestionCommandTests
         var result = FluentActions.Awaiting(Action);
 
         //Assert
-        await result.Should().ThrowExactlyAsync<QuestionNotFoundApplicationException>()
+        _ = await result.Should().ThrowExactlyAsync<QuestionNotFoundApplicationException>()
             .WithMessage($"A question with {command.question.Id.Value} can't be found");
     }
 
@@ -99,15 +98,15 @@ public class PutQuestionCommandTests
         var question = Question.Create(questionId, title, answers, questionTags, lastModifiedAt);
 
         var command = PutQuestionRequest.ToCommand(questionId.Value);
-        _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())
+        _ = _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == command.question.Id), Arg.Any<CancellationToken>())
             .Returns(question);
 
         //Act
-        await _handler.Handle(command, default);
+        _ = await _handler.Handle(command, default);
 
         //Assert
         _questionRepositoryMock.Received(1).Delete(Arg.Is<Question>(question => question.Id == command.question.Id));
         await _questionRepositoryMock.Received(1).AddAsync(Arg.Is<Question>(question => question == command.question));
-        await _unitOfWorkMock.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
+        _ = await _unitOfWorkMock.Received(2).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

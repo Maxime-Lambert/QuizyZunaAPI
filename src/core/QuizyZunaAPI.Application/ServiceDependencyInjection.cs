@@ -9,14 +9,14 @@ public static class ServiceDependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        var assembly = typeof(ServiceDependencyInjection).Assembly;
+        System.Reflection.Assembly assembly = typeof(ServiceDependencyInjection).Assembly;
 
-        services.AddMediatR(configuration =>
-            configuration.RegisterServicesFromAssembly(assembly)); 
+        _ = services.AddMediatR(configuration =>
+            configuration.RegisterServicesFromAssembly(assembly));
 
-        services.AddValidatorsFromAssembly(assembly);
+        _ = services.AddValidatorsFromAssembly(assembly);
 
-        services.AddTransient(typeof(IPipelineBehavior<,>),typeof(RequestLoggingPipelineBehavior<,>));
+        _ = services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggingPipelineBehavior<,>));
 
         return services;
     }

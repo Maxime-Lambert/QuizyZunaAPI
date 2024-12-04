@@ -1,6 +1,4 @@
-﻿using QuizyZunaAPI.Domain.Questions.Exceptions;
-
-namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
+﻿namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record QuestionTitle
 {

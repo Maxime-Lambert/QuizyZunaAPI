@@ -10,7 +10,7 @@ public sealed class DatabaseOptionsSetup(IConfiguration configuration) : IConfig
 
     public void Configure(DatabaseOptions options)
     {
-        if(options is not null)
+        if (options is not null)
         {
             var connectionString = _configuration.GetConnectionString("Database");
 

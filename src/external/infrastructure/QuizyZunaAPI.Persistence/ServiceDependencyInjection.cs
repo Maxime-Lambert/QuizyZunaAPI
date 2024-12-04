@@ -13,24 +13,24 @@ public static class ServiceDependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        services.ConfigureOptions<DatabaseOptionsSetup>();
+        _ = services.ConfigureOptions<DatabaseOptionsSetup>();
 
-        services.AddDbContext<ApplicationDbContext>((serviceProvider, dbContextOptionsBuilder) =>
+        _ = services.AddDbContext<ApplicationDbContext>((serviceProvider, dbContextOptionsBuilder) =>
         {
-            var databaseOptions = serviceProvider.GetService<IOptions<DatabaseOptions>>()!.Value;
+            DatabaseOptions databaseOptions = serviceProvider.GetService<IOptions<DatabaseOptions>>()!.Value;
 
-            dbContextOptionsBuilder.UseNpgsql(databaseOptions.ConnectionString, npgsqlOptionsAction =>
+            _ = dbContextOptionsBuilder.UseNpgsql(databaseOptions.ConnectionString, npgsqlOptionsAction =>
             {
-                npgsqlOptionsAction.CommandTimeout(databaseOptions.CommandTimeout);
-                npgsqlOptionsAction.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
+                _ = npgsqlOptionsAction.CommandTimeout(databaseOptions.CommandTimeout);
+                _ = npgsqlOptionsAction.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
             });
-            dbContextOptionsBuilder.EnableDetailedErrors(databaseOptions.EnableDetailedErrors);
-            dbContextOptionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging);
-            dbContextOptionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            _ = dbContextOptionsBuilder.EnableDetailedErrors(databaseOptions.EnableDetailedErrors);
+            _ = dbContextOptionsBuilder.EnableSensitiveDataLogging(databaseOptions.EnableSensitiveDataLogging);
+            _ = dbContextOptionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
 
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IQuestionRepository, QuestionRepository>();
+        _ = services.AddScoped<IUnitOfWork, UnitOfWork>();
+        _ = services.AddScoped<IQuestionRepository, QuestionRepository>();
 
         return services;
     }

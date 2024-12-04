@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using QuizyZunaAPI.Api.Middlewares.ExceptionHandlers;
+using QuizyZunaAPI.Presentation.Middlewares.ExceptionHandlers;
 
 namespace QuizyZunaAPI.Presentation;
 
@@ -15,11 +15,11 @@ public static class ServiceDependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddRateLimiter(options =>
+        _ = services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-            options.AddPolicy("basic", httpContext =>
+            _ = options.AddPolicy("basic", httpContext =>
                 RateLimitPartition.GetFixedWindowLimiter(
                     partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
                     factory: _ => new FixedWindowRateLimiterOptions
@@ -29,9 +29,9 @@ public static class ServiceDependencyInjection
                     }));
         });
 
-        services.AddProblemDetails();
+        _ = services.AddProblemDetails();
 
-        services.AddApiVersioning(options =>
+        _ = services.AddApiVersioning(options =>
         {
             options.DefaultApiVersion = new ApiVersion(1);
             options.AssumeDefaultVersionWhenUnspecified = true;
@@ -43,18 +43,18 @@ public static class ServiceDependencyInjection
             options.SubstituteApiVersionInUrl = true;
         });
 
-        services.AddHealthChecks()
+        _ = services.AddHealthChecks()
             .AddNpgSql(builder?.Configuration.GetConnectionString("Database")!);
 
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        _ = services.AddEndpointsApiExplorer();
+        _ = services.AddSwaggerGen();
 
 
-        services.AddExceptionHandler<QuestionNotFoundApplicationExceptionHandler>();
-        services.AddExceptionHandler<QuestionsNotFoundWithFilersApplicationExceptionHandler>();
-        services.AddExceptionHandler<WrongAnswersContainsCorrectAnswerDomainExceptionHandler>();
-        services.AddExceptionHandler<WrongAnswersDoesNotContainThreeElementsDomainExceptionHandler>();
-        services.AddExceptionHandler<GeneralExceptionHandler>();
+        _ = services.AddExceptionHandler<QuestionNotFoundApplicationExceptionHandler>();
+        _ = services.AddExceptionHandler<QuestionsNotFoundWithFilersApplicationExceptionHandler>();
+        _ = services.AddExceptionHandler<WrongAnswersContainsCorrectAnswerDomainExceptionHandler>();
+        _ = services.AddExceptionHandler<WrongAnswersDoesNotContainThreeElementsDomainExceptionHandler>();
+        _ = services.AddExceptionHandler<GeneralExceptionHandler>();
 
         return services;
     }

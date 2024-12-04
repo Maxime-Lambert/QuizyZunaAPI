@@ -32,7 +32,7 @@ public class DeleteQuestionCommandTests
         await _handler.Handle(DeleteQuestionCommand, default);
 
         //Assert
-        await _questionRepositoryMock.Received(1).GetByIdAsync(
+        _ = await _questionRepositoryMock.Received(1).GetByIdAsync(
             Arg.Is<QuestionId>(questionId => questionId.Value == DeleteQuestionCommand.questionId),
             Arg.Any<CancellationToken>());
     }
@@ -58,7 +58,7 @@ public class DeleteQuestionCommandTests
         QuestionLastModifiedAt lastModifiedAt = new(DateTime.UtcNow);
         var question = Question.Create(id, title, answers, questionTags, lastModifiedAt);
 
-        _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == id), Arg.Any<CancellationToken>())
+        _ = _questionRepositoryMock.GetByIdAsync(Arg.Is<QuestionId>(questionId => questionId == id), Arg.Any<CancellationToken>())
             .Returns(question);
 
         var command = DeleteQuestionCommand with { questionId = id.Value };
@@ -68,14 +68,14 @@ public class DeleteQuestionCommandTests
 
         //Assert
         _questionRepositoryMock.Received(1).Delete(Arg.Is<Question>(question => question.Id == id));
-        await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        _ = await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_ShouldNotCall_Delete_AndSaveChanges_WhenQuestionDoesNotExist()
     {
         //Arrange
-        _questionRepositoryMock.GetByIdAsync(
+        _ = _questionRepositoryMock.GetByIdAsync(
             Arg.Is<QuestionId>(questionId => questionId.Value == DeleteQuestionCommand.questionId),
             Arg.Any<CancellationToken>()).ReturnsNull();
 
@@ -84,6 +84,6 @@ public class DeleteQuestionCommandTests
 
         //Assert
         _questionRepositoryMock.DidNotReceive().Delete(Arg.Is<Question>(question => question.Id.Value == DeleteQuestionCommand.questionId));
-        await _unitOfWorkMock.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        _ = await _unitOfWorkMock.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

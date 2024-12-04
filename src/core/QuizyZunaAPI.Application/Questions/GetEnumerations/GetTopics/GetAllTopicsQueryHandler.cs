@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-using QuizyZunaAPI.Application.Questions.GetEnumerations.GetTopics;
 using QuizyZunaAPI.Domain.Questions.Enumerations;
 
-namespace QuizyZunaAPI.Application.Questions.Put;
+namespace QuizyZunaAPI.Application.Questions.GetEnumerations.GetTopics;
 
 public sealed class GetAllTopicsQueryHandler() : IRequestHandler<GetAllTopicsQuery, string[]>
 {

@@ -11,12 +11,12 @@ public sealed class QuestionRepository(ApplicationDbContext context) : IQuestion
 
     public async Task AddAsync(Question question)
     {
-        await _context.Questions.AddAsync(question).ConfigureAwait(true);
+        _ = await _context.Questions.AddAsync(question).ConfigureAwait(false);
     }
 
     public void Delete(Question question)
     {
-        _context.Questions.Remove(question);
+        _ = _context.Questions.Remove(question);
     }
 
     public Task<Question?> GetByIdAsync(QuestionId questionId, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public sealed class QuestionRepository(ApplicationDbContext context) : IQuestion
 
     public void Update(Question question)
     {
-        _context.Questions.Update(question);
+        _ = _context.Questions.Update(question);
     }
 
     public Task<Question?> GetByTitleAsync(QuestionTitle questionTitle, CancellationToken cancellationToken)

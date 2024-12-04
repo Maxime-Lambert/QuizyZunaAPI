@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-using QuizyZunaAPI.Application.Questions.GetEnumerations.GetDifficulties;
 using QuizyZunaAPI.Domain.Questions.Enumerations;
 
-namespace QuizyZunaAPI.Application.Questions.Put;
+namespace QuizyZunaAPI.Application.Questions.GetEnumerations.GetDifficulties;
 
 public sealed class GetAllDifficultiesQueryHandler() : IRequestHandler<GetAllDifficultiesQuery, string[]>
 {

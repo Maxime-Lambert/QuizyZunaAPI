@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using QuizyZunaAPI.Presentation;
 
-namespace QuizyZunaAPI.Api.Middlewares.ExceptionHandlers;
+namespace QuizyZunaAPI.Presentation.Middlewares.ExceptionHandlers;
 
 public sealed class GeneralExceptionHandler(ILogger<GeneralExceptionHandler> logger) : IExceptionHandler
 {
@@ -28,7 +27,7 @@ public sealed class GeneralExceptionHandler(ILogger<GeneralExceptionHandler> log
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-        httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+        _ = httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return ValueTask.FromResult(true);
     }

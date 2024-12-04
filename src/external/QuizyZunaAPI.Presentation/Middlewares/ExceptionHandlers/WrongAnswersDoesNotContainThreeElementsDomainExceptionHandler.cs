@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using QuizyZunaAPI.Domain.Questions.Exceptions;
-using QuizyZunaAPI.Presentation;
-using MediatR;
 
-namespace QuizyZunaAPI.Api.Middlewares.ExceptionHandlers;
+namespace QuizyZunaAPI.Presentation.Middlewares.ExceptionHandlers;
 
 public sealed class WrongAnswersDoesNotContainThreeElementsDomainExceptionHandler(ILogger<WrongAnswersDoesNotContainThreeElementsDomainExceptionHandler> logger) : IExceptionHandler
 {
@@ -36,7 +34,7 @@ public sealed class WrongAnswersDoesNotContainThreeElementsDomainExceptionHandle
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
 
-        httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+        _ = httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return ValueTask.FromResult(true);
     }

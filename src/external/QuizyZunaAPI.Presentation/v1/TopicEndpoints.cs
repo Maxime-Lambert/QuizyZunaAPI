@@ -14,9 +14,9 @@ public static class TopicEndpoints
 
     public static IEndpointRouteBuilder MapTopicsEndpoints(this IEndpointRouteBuilder app)
     {
-        var topicEndpoints = app.MapGroup(TopicsEndpointRouteValue);
+        RouteGroupBuilder topicEndpoints = app.MapGroup(TopicsEndpointRouteValue);
 
-        topicEndpoints.MapGet("", async (ISender sender) =>
+        _ = topicEndpoints.MapGet("", async (ISender sender) =>
         {
             var request = new GetAllTopicsQuery();
 

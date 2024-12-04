@@ -24,7 +24,8 @@ public sealed class Question
         ArgumentNullException.ThrowIfNull(tags);
         ArgumentNullException.ThrowIfNull(lastModifiedAt);
 
-        return new Question {
+        return new Question
+        {
             Id = id,
             Title = title,
             Answers = answers,

@@ -14,20 +14,20 @@ public sealed class PutQuestionCommandHandler(IQuestionRepository questionReposi
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var question = await _questionRepository.GetByIdAsync(request.question.Id, cancellationToken).ConfigureAwait(true);
+        Question? question = await _questionRepository.GetByIdAsync(request.question.Id, cancellationToken).ConfigureAwait(true);
 
-        if(question is null)
+        if (question is null)
         {
             throw new QuestionNotFoundApplicationException($"A question with {request.question.Id.Value} can't be found");
         }
 
         _questionRepository.Delete(question);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+        _ = await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
 
         await _questionRepository.AddAsync(request.question).ConfigureAwait(true);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+        _ = await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
 
         return request.question;
     }

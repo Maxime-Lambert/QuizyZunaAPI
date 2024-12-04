@@ -2,6 +2,8 @@
 
 public abstract class BaseFunctionalTest : IClassFixture<FunctionalTestWebAppFactory>
 {
+    private const string LocalhostUrl = "https://localhost:7012/api/v1/questions/";
+
     protected HttpClient HttpClient { get; init; }
     protected Uri BaseApiUrl { get; init; }
 
@@ -9,6 +11,6 @@ public abstract class BaseFunctionalTest : IClassFixture<FunctionalTestWebAppFac
     {
         ArgumentNullException.ThrowIfNull(factory);
         HttpClient = factory.CreateClient();
-        BaseApiUrl = new("https://localhost:7012/api/v1/questions/");
+        BaseApiUrl = new(LocalhostUrl);
     }
 }

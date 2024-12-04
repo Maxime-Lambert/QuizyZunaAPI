@@ -18,8 +18,9 @@ public sealed class WrongAnswer
         ArgumentNullException.ThrowIfNull(questionId);
         ArgumentNullException.ThrowIfNull(timesAnswered);
 
-        return new WrongAnswer {
-            QuestionId = questionId, 
+        return new WrongAnswer
+        {
+            QuestionId = questionId,
             Value = wrongAnswer,
             TimesAnswered = timesAnswered
         };

@@ -32,20 +32,20 @@ public sealed class FunctionalTestWebAppFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureTestServices(services =>
+        _ = builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
+            _ = services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            _ = services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(_dbContainer.GetConnectionString(), npgsqlOptionsAction =>
+                _ = options.UseNpgsql(_dbContainer.GetConnectionString(), npgsqlOptionsAction =>
                 {
-                    npgsqlOptionsAction.CommandTimeout(30);
-                    npgsqlOptionsAction.EnableRetryOnFailure(3);
+                    _ = npgsqlOptionsAction.CommandTimeout(30);
+                    _ = npgsqlOptionsAction.EnableRetryOnFailure(3);
                 });
-                options.EnableDetailedErrors(false);
-                options.EnableSensitiveDataLogging(true);
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                _ = options.EnableDetailedErrors(false);
+                _ = options.EnableSensitiveDataLogging(true);
+                _ = options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
         });
         base.ConfigureWebHost(builder);

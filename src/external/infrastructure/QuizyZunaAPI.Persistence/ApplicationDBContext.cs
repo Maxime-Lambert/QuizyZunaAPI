@@ -2,19 +2,18 @@
 
 using QuizyZunaAPI.Application;
 using QuizyZunaAPI.Domain.Questions;
-using QuizyZunaAPI.Domain.Questions.Enumerations;
 
 namespace QuizyZunaAPI.Persistence;
 
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IUnitOfWork
 {
-    public DbSet<Question> Questions { get; set; }
+    public required DbSet<Question> Questions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        _ = modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

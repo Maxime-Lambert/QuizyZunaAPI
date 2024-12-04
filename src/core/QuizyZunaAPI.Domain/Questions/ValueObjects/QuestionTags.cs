@@ -14,9 +14,6 @@ public sealed record QuestionTags
 
     public QuestionTags(Themes themes, Difficulty difficulty, QuestionYear year)
     {
-        ArgumentNullException.ThrowIfNull(nameof(themes));
-        ArgumentNullException.ThrowIfNull(nameof(year));
-
         Themes = themes;
         Difficulty = difficulty;
         Year = year;

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
+using QuizyZunaAPI.Application.Questions.Create;
 using QuizyZunaAPI.Application.Questions.Responses;
 
 namespace QuizyZunaAPI.Api.FunctionalTests.Questions;

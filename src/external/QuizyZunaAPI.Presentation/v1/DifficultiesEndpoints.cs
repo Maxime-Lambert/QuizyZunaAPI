@@ -14,9 +14,9 @@ public static class DifficultiesEndpoints
 
     public static IEndpointRouteBuilder MapDifficultiesEndpoints(this IEndpointRouteBuilder app)
     {
-        var difficultyEndpoints = app.MapGroup(DifficultiesEndpointRouteValue);
+        RouteGroupBuilder difficultyEndpoints = app.MapGroup(DifficultiesEndpointRouteValue);
 
-        difficultyEndpoints.MapGet("", async (ISender sender) =>
+        _ = difficultyEndpoints.MapGet("", async (ISender sender) =>
         {
             var request = new GetAllDifficultiesQuery();
 

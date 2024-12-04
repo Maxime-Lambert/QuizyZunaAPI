@@ -1,8 +1,8 @@
 ﻿using QuizyZunaAPI.Application.Questions.Adapters;
-using QuizyZunaAPI.Application.Questions.CreateQuestion;
+using QuizyZunaAPI.Application.Questions.Create;
 using QuizyZunaAPI.Application.Questions.Delete;
+using QuizyZunaAPI.Application.Questions.GetAll;
 using QuizyZunaAPI.Application.Questions.GetById;
-using QuizyZunaAPI.Application.Questions.GetRange;
 using QuizyZunaAPI.Application.Questions.Put;
 
 namespace QuizyZunaAPI.Application.IntegrationTests.Questions;
@@ -23,7 +23,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         var questionInDb = DbContext.Questions.FirstOrDefault(question => question.Id == command.question.Id);
 
         //Assert
-        questionInDb.Should().NotBeNull();
+        _ = questionInDb.Should().NotBeNull();
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         var questionInDb = DbContext.Questions.FirstOrDefault(question => question.Id == command.question.Id);
 
         //Assert
-        questionInDb!.Title.Value.Should().Be(putRequest.title);
+        _ = questionInDb!.Title.Value.Should().Be(putRequest.title);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         var questionInDb = DbContext.Questions.FirstOrDefault(question => question.Id == command.question.Id);
 
         //Assert
-        questionInDb.Should().BeNull();
+        _ = questionInDb.Should().BeNull();
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         var result = await Sender.Send(getCommand);
 
         //Assert
-        result.Should().NotBeNull();
+        _ = result.Should().NotBeNull();
     }
 
     [Fact]
@@ -125,9 +125,9 @@ public class QuestionsIntegrationTests(IntegrationTestWebAppFactory factory) : B
         var result = await Sender.Send(getAllRequest);
 
         //Assert
-        result.Count().Should().Be(3);
+        _ = result.Count().Should().Be(3);
         result.Should().OnlyContain(question => string.Equals(question.difficulty, "Novice", StringComparison.Ordinal) &&
-                                               question.themes.All(theme => string.Equals(theme, "Gastronomy", StringComparison.Ordinal) 
+                                               question.themes.All(theme => string.Equals(theme, "Gastronomy", StringComparison.Ordinal)
                                                                     || string.Equals(theme, "LifeSciences", StringComparison.Ordinal)));
     }
 }

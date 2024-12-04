@@ -18,21 +18,22 @@ public sealed class AddTimesAnsweredCommandHandler(IUnitOfWork unitOfWork, IQues
 
         QuestionTitle questionTitle = new(request.QuestionTitle);
 
-        var question = await _questionRepository.GetByTitleAsync(questionTitle, cancellationToken).ConfigureAwait(true);
+        Question? question = await _questionRepository.GetByTitleAsync(questionTitle, cancellationToken).ConfigureAwait(true);
 
-        if(question is null)
+        if (question is null)
         {
             throw new QuestionNotFoundApplicationException($"A question with {request.QuestionTitle} can't be found");
         }
 
         _questionRepository.Delete(question);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+        _ = await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
 
-        if (string.Equals(question.Answers.CorrectAnswer.Value,request.AnswerGiven,StringComparison.Ordinal))
+        if (string.Equals(question.Answers.CorrectAnswer.Value, request.AnswerGiven, StringComparison.Ordinal))
         {
             question.Answers.CorrectAnswer.TimesAnswered.AddOne();
-        } else
+        }
+        else
         {
             question.Answers.WrongAnswers.Value
                 .FirstOrDefault(wrongAnswer => string.Equals(wrongAnswer.Value, request.AnswerGiven, StringComparison.Ordinal))!
@@ -41,6 +42,6 @@ public sealed class AddTimesAnsweredCommandHandler(IUnitOfWork unitOfWork, IQues
         question.LastModifiedAt = new(DateTime.UtcNow);
         await _questionRepository.AddAsync(question).ConfigureAwait(true);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
+        _ = await _unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(true);
     }
 }
