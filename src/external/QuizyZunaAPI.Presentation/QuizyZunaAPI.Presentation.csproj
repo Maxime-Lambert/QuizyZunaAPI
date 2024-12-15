@@ -16,6 +16,7 @@
     <PackageReference Include="Asp.Versioning.Mvc" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
   </ItemGroup>
   
   <ItemGroup>

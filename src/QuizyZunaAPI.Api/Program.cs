@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Asp.Versioning.Builder;
+using System.Security.Claims;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,8 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddPersistence()
                 .AddApplication()
-                .AddPresentation(builder);
+                .AddPresentation(builder.Configuration);
+
 
 builder.Services.AddCors(options => options.AddPolicy("QuizyZuna React App", builder =>
     builder.WithOrigins("https://brave-coast-0cc72c303.5.azurestaticapps.net/")
@@ -74,6 +76,9 @@ versionedGroup.MapHealthChecks("health", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+
+versionedGroup.MapGet("users/me", (ClaimsPrincipal claimsPrincipal) => claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value))
+    .RequireAuthorization();
 
 await app.RunAsync().ConfigureAwait(false);
 

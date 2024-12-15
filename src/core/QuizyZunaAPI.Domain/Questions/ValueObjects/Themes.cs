@@ -4,7 +4,7 @@ namespace QuizyZunaAPI.Domain.Questions.ValueObjects;
 
 public sealed record Themes
 {
-    public IEnumerable<Theme> Value { get; private set; } = new List<Theme>();
+    public IEnumerable<Theme> Value { get; private set; } = [];
 
     public void Clear()
     {

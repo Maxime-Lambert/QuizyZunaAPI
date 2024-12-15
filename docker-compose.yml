@@ -31,3 +31,24 @@ services:
       - ConnectionStrings__Database=Host=Database;Username=postgres;Password=postgres;Database=quizyzuna-db;
     ports:
       - "5215:5215"
+
+  quizyzuna-keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: Keycloak
+    command: start-dev
+    environment:
+        - KC_HEALTH_ENABLED=true
+        - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+        - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+        - KC_DB=postgres
+        - KC_DB_URL=jdbc:postgresql://Database/quizyzuna-db 
+        - KC_DB_USERNAME=postgres
+        - KC_DB_PASSWORD=postgres
+    volumes:
+        - ./.containers/identity:/opt/keycloak/data
+    ports:
+        - 18080:8080    
+    depends_on:
+        quizyzuna-db:
+          condition: service_healthy
+    
